@@ -13,11 +13,13 @@ struct Todo: Identifiable, Codable {
     let content: String
     let completed: Bool
     let categoryId: String?
+    let createdAt: String
     
     enum CodingKeys: String, CodingKey {
         case id
         case content
         case completed
         case categoryId = "category_id"
+        case createdAt = "created_at"
     }
 }

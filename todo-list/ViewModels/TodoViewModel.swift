@@ -10,7 +10,6 @@ import Combine
 
 class CategoriesViewModel: ObservableObject {
     @Published var categories: [Category] = []
-    private var cancellables: Set<AnyCancellable> = []
 
     func fetchCategoriesWithTodos() {
         guard let url = URL(string: "http://localhost:8000/categories_with_todos") else { return }
