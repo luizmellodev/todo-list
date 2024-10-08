@@ -9,7 +9,13 @@ import Foundation
 
 struct Category: Identifiable, Codable {
     let id: String
-    let name: String
+    var name: String
     var todos: [Todo]
+    var createdAt: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, todos
+        case createdAt = "created_at"
+    }
 }
 

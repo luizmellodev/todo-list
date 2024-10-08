@@ -10,15 +10,13 @@ import Foundation
 
 struct Todo: Identifiable, Codable {
     let id: String
-    let content: String
-    let completed: Bool
-    let categoryId: String?
-    let createdAt: String
+    var content: String
+    var completed: Bool
+    var categoryId: String?
+    var createdAt: String
     
     enum CodingKeys: String, CodingKey {
-        case id
-        case content
-        case completed
+        case id, content, completed
         case categoryId = "category_id"
         case createdAt = "created_at"
     }
