@@ -5,8 +5,9 @@
 //  Created by Luiz Mello on 25/09/24.
 //
 import Foundation
+import Foundation
 
-class CategoriesViewModel: ObservableObject {
+class CategoriesViewModelSimple {
     
     @Published var categories: [Category] = []
     @Published var draggedTodo: Todo?
