@@ -5,10 +5,13 @@
 //  Created by Luiz Mello on 25/09/24.
 //
 import Foundation
+import Combine
 
-class CategoriesViewModelSimple {
+class CategoriesViewModel: ObservableObject {
     
     @Published var categories: [Category] = []
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private let baseURL = "http://localhost:8000"
     
@@ -18,27 +21,14 @@ class CategoriesViewModelSimple {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .decode(type: [Category].self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .catch { error -> Just<[Category]> in
                 print("Error fetching categories: \(error)")
-                return
+                return Just([])
             }
-            
-            guard let data = data else {
-                print("No data received")
-                return
-            }
-            
-            do {
-                let categories = try JSONDecoder().decode([Category].self, from: data)
-                DispatchQueue.main.async {
-                    self.categories = categories
-                }
-            } catch {
-                print("Error decoding categories: \(error)")
-            }
-        }
-        
-        task.resume()
+            .assign(to: &$categories)
     }
 }
