@@ -5,8 +5,9 @@
 //  Created by Luiz Mello on 25/09/24.
 //
 import Foundation
+import Foundation
 
-class CategoriesViewModel: ObservableObject {
+class CategoriesViewModelSimple {
     
     @Published var categories: [Category] = []
     
@@ -14,11 +15,11 @@ class CategoriesViewModel: ObservableObject {
     
     func fetchCategories() {
         guard let url = URL(string: "\(baseURL)/categories_with_todos") else {
-            print("Invalid URL")
+            print("Invalid URL for fetching categories")
             return
         }
         
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("Error fetching categories: \(error)")
                 return
@@ -30,9 +31,9 @@ class CategoriesViewModel: ObservableObject {
             }
             
             do {
-                let decodedCategories = try JSONDecoder().decode([Category].self, from: data)
+                let categories = try JSONDecoder().decode([Category].self, from: data)
                 DispatchQueue.main.async {
-                    self?.categories = decodedCategories
+                    self.categories = categories
                 }
             } catch {
                 print("Error decoding categories: \(error)")
