@@ -21,3 +21,17 @@ struct Todo: Identifiable, Codable {
         case createdAt = "created_at"
     }
 }
+
+struct TodoRequest: Codable {
+    var content: String?
+    var completed: Bool?
+    var categoryId: String?
+    var createdAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case content, completed
+        case categoryId = "category_id"
+        case createdAt = "created_at"
+    }
+}
+
