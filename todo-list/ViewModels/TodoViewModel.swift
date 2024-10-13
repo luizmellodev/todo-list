@@ -45,7 +45,8 @@ class CategoriesViewModel: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let newTodo = TodoRequest(
+        let newTodo = Todo(
+            id: UUID().uuidString,
             content: content,
             completed: completed,
             categoryId: categoryId,

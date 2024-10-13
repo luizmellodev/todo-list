@@ -13,6 +13,10 @@ struct TodoView: View {
     
     @StateObject private var viewModel = CategoriesViewModel()
     
+    @State var newTodoClicked: Bool = false
+    @State var textFieldText: String = ""
+    @State private var selectedCategory: Category?
+    
     var body: some View {
         ScrollViewReader { proxy in
             NavigationView {
@@ -115,11 +119,45 @@ struct TodoRowView: View {
                     .contentTransition(.symbolEffect(.replace))
             })
             
-            Text(todo.content)
-                .strikethrough(todo.completed)
-                .foregroundStyle(todo.completed ? .gray : .primary)
-            
-            Spacer()
+            Picker("", selection: $selectedCategory) {
+                Text("None").tag(nil as Category?)
+                ForEach(viewModel.categories) { category in
+                    Text(category.name).tag(category as Category?)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+        }
+        .onSubmit {
+            withAnimation {
+                guard let category = selectedCategory else {
+                    print("Please select a category")
+                    return
+                }
+                viewModel.createTodo(content: self.textFieldText, completed: false, categoryId: category.id)
+                textFieldText.removeAll()
+                selectedCategory = nil
+            }
+        }
+    }
+    
+    struct TodoRowView: View {
+        let todo: Todo
+        @ObservedObject var viewModel: CategoriesViewModel
+        
+        var body: some View {
+            HStack {
+                Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
+                    .font(.title2)
+                    .padding(3)
+                    .contentShape(.rect)
+                    .foregroundStyle(todo.completed ? .gray : .accentColor)
+                    .contentTransition(.symbolEffect(.replace))
+                
+                Text(todo.content)
+                    .strikethrough(todo.completed)
+                    .foregroundStyle(todo.completed ? .gray : .primary)
+                Spacer()
+            }
         }
     }
 }
