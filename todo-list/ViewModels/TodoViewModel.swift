@@ -5,11 +5,14 @@
 //  Created by Luiz Mello on 25/09/24.
 //
 import Foundation
+import Combine
 
-class CategoriesViewModelSimple {
+class CategoriesViewModel: ObservableObject {
     
     @Published var categories: [Category] = []
     @Published var draggedTodo: Todo?
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private var cancellables = Set<AnyCancellable>()
     
