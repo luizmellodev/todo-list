@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Category: Identifiable, Codable {
+struct Category: Identifiable, Codable, Hashable {
     let id: String
     var name: String
     var todos: [Todo]
@@ -17,5 +17,12 @@ struct Category: Identifiable, Codable {
         case id, name, todos
         case createdAt = "created_at"
     }
+    
+    static func == (lhs: Category, rhs: Category) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
-
