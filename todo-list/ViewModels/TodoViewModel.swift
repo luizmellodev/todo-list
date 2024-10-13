@@ -5,7 +5,6 @@
 //  Created by Luiz Mello on 25/09/24.
 //
 import Foundation
-import Foundation
 
 class CategoriesViewModelSimple {
     
