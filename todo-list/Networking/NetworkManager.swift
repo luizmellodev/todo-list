@@ -84,4 +84,25 @@ class NetworkManager: NetworkManagerProtocol {
             }
             .eraseToAnyPublisher()
     }
+    
+    func update<T: Encodable>(to endpoint: String, with body: T) -> AnyPublisher<Void, NetworkError> {
+        guard let url = URL(string: "\(baseURL)/\(endpoint)") else {
+            return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+        do {
+            request.httpBody = try JSONEncoder().encode(body)
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        } catch {
+            return Fail(error: NetworkError.decodingError).eraseToAnyPublisher()
+        }
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map { _ in () }
+            .mapError { _ in NetworkError.badServerResponse }
+            .eraseToAnyPublisher()
+    }
 }

@@ -14,6 +14,7 @@
 		7916EE122CBC872B00827762 /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EE112CBC872B00827762 /* NetworkManagerProtocol.swift */; };
 		7916EE142CBC875C00827762 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EE132CBC875C00827762 /* NetworkManager.swift */; };
 		7916EE162CBC89BC00827762 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EE152CBC89BC00827762 /* NetworkError.swift */; };
+		7916EE182CBC9E6500827762 /* TodoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EE172CBC9E6500827762 /* TodoRequest.swift */; };
 		799323892CA35BA5005DF4BE /* todo_listApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799323882CA35BA5005DF4BE /* todo_listApp.swift */; };
 		7993238D2CA35BA6005DF4BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7993238C2CA35BA6005DF4BE /* Assets.xcassets */; };
 		799323902CA35BA6005DF4BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7993238F2CA35BA6005DF4BE /* Preview Assets.xcassets */; };
@@ -47,6 +48,7 @@
 		7916EE112CBC872B00827762 /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
 		7916EE132CBC875C00827762 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		7916EE152CBC89BC00827762 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		7916EE172CBC9E6500827762 /* TodoRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRequest.swift; sourceTree = "<group>"; };
 		799323852CA35BA5005DF4BE /* todo-list.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "todo-list.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		799323882CA35BA5005DF4BE /* todo_listApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = todo_listApp.swift; sourceTree = "<group>"; };
 		7993238C2CA35BA6005DF4BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 			children = (
 				7916EDFD2CA4D95200827762 /* Todo.swift */,
 				7916EDFF2CA4D95700827762 /* Category.swift */,
+				7916EE172CBC9E6500827762 /* TodoRequest.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 			files = (
 				7916EE0B2CA4DA2600827762 /* TodoViewModel.swift in Sources */,
 				7916EE162CBC89BC00827762 /* NetworkError.swift in Sources */,
+				7916EE182CBC9E6500827762 /* TodoRequest.swift in Sources */,
 				7916EE072CA4D9F800827762 /* TodoView.swift in Sources */,
 				7916EDFE2CA4D95200827762 /* Todo.swift in Sources */,
 				7916EE142CBC875C00827762 /* NetworkManager.swift in Sources */,
