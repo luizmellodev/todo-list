@@ -14,8 +14,14 @@ class CategoriesViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
+    private let networkManager: NetworkManagerProtocol
+    
+    init(networkManager: NetworkManagerProtocol = NetworkManager.shared) {
+        self.networkManager = networkManager
+    }
+        
     func fetchCategories() {
-        NetworkManager.shared.fetch(from: "categories_with_todos")
+        networkManager.fetch(from: "categories_with_todos")
             .receive(on: DispatchQueue.main)
             .catch { error -> Just<[Category]> in
                 print("Error fetching categories: \(error)")
@@ -33,7 +39,7 @@ class CategoriesViewModel: ObservableObject {
             createdAt: ISO8601DateFormatter().string(from: Date())
         )
         
-        NetworkManager.shared.create(to: "todos", body: newTodo)
+        networkManager.create(to: "todos", body: newTodo)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -43,10 +49,42 @@ class CategoriesViewModel: ObservableObject {
                     print("Error creating todo: \(error)")
                 }
             }, receiveValue: {
-                if let categoryIndex = self.categories.firstIndex(where: { $0.id == categoryId }) {
-                    self.categories[categoryIndex].todos.append(newTodo)
-                }
+                self.appendTodoToCategory(newTodo, categoryId: categoryId)
             })
             .store(in: &cancellables)
+    }
+    
+    func deleteTodos(at offsets: IndexSet, in category: Category) {
+        guard let categoryIndex = categories.firstIndex(where: { $0.id == category.id }) else { return }
+        
+        for index in offsets {
+            let todo = categories[categoryIndex].todos[index]
+            networkManager.delete(from: "todos/\(todo.id)")
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        self.removeTodoFromCategory(todo, at: categoryIndex)
+                    case .failure(let error):
+                        print("Error deleting todo: \(error)")
+                    }
+                }, receiveValue: {})
+                .store(in: &cancellables)
+        }
+    }
+}
+
+extension CategoriesViewModel {
+    private func appendTodoToCategory(_ todo: Todo, categoryId: String?) {
+        guard let categoryId = categoryId else { return }
+        if let categoryIndex = categories.firstIndex(where: { $0.id == categoryId }) {
+            categories[categoryIndex].todos.append(todo)
+        }
+    }
+    
+    private func removeTodoFromCategory(_ todo: Todo, at categoryIndex: Int) {
+        if let todoIndex = categories[categoryIndex].todos.firstIndex(where: { $0.id == todo.id }) {
+            categories[categoryIndex].todos.remove(at: todoIndex)
+        }
     }
 }

@@ -14,7 +14,7 @@ class NetworkManager: NetworkManagerProtocol {
     
     static let shared = NetworkManager()
 
-    func fetch<T: Decodable>(from endpoint: String) -> AnyPublisher<T, Error> {
+    func fetch<T: Decodable>(from endpoint: String) -> AnyPublisher<T, NetworkError> {
         guard let url = URL(string: "\(baseURL)/\(endpoint)") else {
             return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
@@ -28,13 +28,12 @@ class NetworkManager: NetworkManagerProtocol {
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .mapError { error in
-                // Convert decoding errors to your custom error type
                 return error as? NetworkError ?? NetworkError.decodingError
             }
             .eraseToAnyPublisher()
     }
 
-    func create<T: Encodable>(to endpoint: String, body: T) -> AnyPublisher<Void, Error> {
+    func create<T: Encodable>(to endpoint: String, body: T) -> AnyPublisher<Void, NetworkError> {
         guard let url = URL(string: "\(baseURL)/\(endpoint)") else {
             return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
@@ -47,7 +46,7 @@ class NetworkManager: NetworkManagerProtocol {
             let jsonData = try JSONEncoder().encode(body)
             request.httpBody = jsonData
         } catch {
-            return Fail(error: error).eraseToAnyPublisher()
+            return Fail(error: NetworkError.decodingError).eraseToAnyPublisher()
         }
 
         return URLSession.shared.dataTaskPublisher(for: request)
@@ -63,15 +62,26 @@ class NetworkManager: NetworkManagerProtocol {
             }
             .eraseToAnyPublisher()
     }
-}
-
-extension NetworkManager {
-    func handleCompletion<T: Decodable>(result: Result<T, Error>, onSuccess: @escaping (T) -> Void, onFailure: @escaping (Error) -> Void) {
-        switch result {
-        case .success(let response):
-            onSuccess(response)
-        case .failure(let error):
-            onFailure(error)
+    
+    func delete(from endpoint: String) -> AnyPublisher<Void, NetworkError> {
+        guard let url = URL(string: "\(baseURL)/\(endpoint)") else {
+            return Fail(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap { data, response in
+                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                    throw NetworkError.badServerResponse
+                }
+                return
+            }
+            .map { _ in () }
+            .mapError { error in
+                return error as? NetworkError ?? .badServerResponse
+            }
+            .eraseToAnyPublisher()
     }
 }

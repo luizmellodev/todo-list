@@ -25,11 +25,16 @@ struct TodoView: View {
                         ForEach(category.todos) { todo in
                             TodoRowView(todo: todo, viewModel: viewModel)
                         }
+                        .onDelete { indexSet in
+                            viewModel.deleteTodos(at: indexSet, in: category)
+                        }
                     }
+                    .id(category.id)
                 }
             }
             .navigationTitle("Todo List")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: EditButton())
         }
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
