@@ -72,6 +72,22 @@ class CategoriesViewModel: ObservableObject {
                 .store(in: &cancellables)
         }
     }
+    
+    func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?) {
+        let updateRequest = TodoRequest(content: content, completed: completed, categoryId: categoryId)
+
+        networkManager.update(to: "todos/\(id)", with: updateRequest)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    self.fetchCategories()
+                case .failure(let error):
+                    print("Error updating todo: \(error)")
+                }
+            }, receiveValue: {})
+            .store(in: &cancellables)
+    }
 }
 
 extension CategoriesViewModel {

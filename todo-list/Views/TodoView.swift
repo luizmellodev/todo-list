@@ -91,16 +91,21 @@ struct TodoView: View {
         
         var body: some View {
             HStack {
-                Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
-                    .font(.title2)
-                    .padding(3)
-                    .contentShape(.rect)
-                    .foregroundStyle(todo.completed ? .gray : .accentColor)
-                    .contentTransition(.symbolEffect(.replace))
+                Button(action: {
+                    viewModel.updateTodo(id: todo.id, content: todo.content, completed: !todo.completed, categoryId: todo.categoryId)
+                }, label: {
+                    Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
+                        .font(.title2)
+                        .padding(3)
+                        .contentShape(.rect)
+                        .foregroundStyle(todo.completed ? .gray : .accentColor)
+                        .contentTransition(.symbolEffect(.replace))
+                })
                 
                 Text(todo.content)
                     .strikethrough(todo.completed)
                     .foregroundStyle(todo.completed ? .gray : .primary)
+                
                 Spacer()
             }
         }
