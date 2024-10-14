@@ -34,8 +34,11 @@ struct TodoView: View {
                                 viewModel.deleteTodos(at: indexSet, in: category)
                             }
                         }
-                        .id(category.id)
+                        .onDelete { indexSet in
+                            viewModel.deleteTodos(at: indexSet, in: category)
+                        }
                     }
+                    .id(category.id)
                 }
                 .refreshable {
                     viewModel.fetchCategories()

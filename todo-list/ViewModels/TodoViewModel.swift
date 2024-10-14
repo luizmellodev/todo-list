@@ -17,8 +17,14 @@ class CategoriesViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
+    private let networkManager: NetworkManagerProtocol
+    
+    init(networkManager: NetworkManagerProtocol = NetworkManager.shared) {
+        self.networkManager = networkManager
+    }
+        
     func fetchCategories() {
-        NetworkManager.shared.fetch(from: "categories_with_todos")
+        networkManager.fetch(from: "categories_with_todos")
             .receive(on: DispatchQueue.main)
             .catch { error -> Just<[Category]> in
                 print("Error fetching categories: \(error)")
@@ -36,7 +42,7 @@ class CategoriesViewModel: ObservableObject {
             createdAt: ISO8601DateFormatter().string(from: Date())
         )
         
-        NetworkManager.shared.create(to: "todos", body: newTodo)
+        networkManager.create(to: "todos", body: newTodo)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -46,9 +52,7 @@ class CategoriesViewModel: ObservableObject {
                     print("Error creating todo: \(error)")
                 }
             }, receiveValue: {
-                if let categoryIndex = self.categories.firstIndex(where: { $0.id == categoryId }) {
-                    self.categories[categoryIndex].todos.append(newTodo)
-                }
+                self.appendTodoToCategory(newTodo, categoryId: categoryId)
             })
             .store(in: &cancellables)
     }
