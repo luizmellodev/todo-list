@@ -12,6 +12,8 @@ struct TodoView: View {
     @State var newTodoClicked: Bool = false
     @State var textFieldText: String = ""
     @State private var selectedCategory: Category?
+    @State private var editMode: EditMode = .inactive
+    @State private var textFieldUpdates: [String: String] = [:]
     
     var body: some View {
         NavigationView {
@@ -23,7 +25,12 @@ struct TodoView: View {
                 ForEach(viewModel.categories) { category in
                     Section(header: Text(category.name)) {
                         ForEach(category.todos) { todo in
-                            TodoRowView(todo: todo, viewModel: viewModel)
+                            TodoRowView(
+                                todo: todo,
+                                editMode: $editMode,
+                                viewModel: viewModel,
+                                textUpdate: $textFieldUpdates
+                            )
                         }
                         .onDelete { indexSet in
                             viewModel.deleteTodos(at: indexSet, in: category)
@@ -35,6 +42,7 @@ struct TodoView: View {
             .navigationTitle("Todo List")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: EditButton())
+            .environment(\.editMode, $editMode)
         }
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
@@ -87,26 +95,49 @@ struct TodoView: View {
     
     struct TodoRowView: View {
         let todo: Todo
+        @Binding var editMode: EditMode
         @ObservedObject var viewModel: CategoriesViewModel
+        @Binding var textUpdate: [String: String]
+        
+        @State private var localText: String
+        
+        init(todo: Todo, editMode: Binding<EditMode>, viewModel: CategoriesViewModel, textUpdate: Binding<[String: String]>) {
+            self.todo = todo
+            self._editMode = editMode
+            self.viewModel = viewModel
+            self._textUpdate = textUpdate
+            self._localText = State(initialValue: textUpdate.wrappedValue[todo.id] ?? todo.content)
+        }
         
         var body: some View {
             HStack {
-                Button(action: {
-                    viewModel.updateTodo(id: todo.id, content: todo.content, completed: !todo.completed, categoryId: todo.categoryId)
-                }, label: {
-                    Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
-                        .font(.title2)
-                        .padding(3)
-                        .contentShape(.rect)
-                        .foregroundStyle(todo.completed ? .gray : .accentColor)
-                        .contentTransition(.symbolEffect(.replace))
-                })
-                
-                Text(todo.content)
-                    .strikethrough(todo.completed)
-                    .foregroundStyle(todo.completed ? .gray : .primary)
-                
-                Spacer()
+                if editMode != .active {
+                    Button(action: {
+                        viewModel.updateTodo(id: todo.id, content: todo.content, completed: !todo.completed, categoryId: todo.categoryId)
+                    }, label: {
+                        Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
+                            .font(.title2)
+                            .padding(3)
+                            .contentShape(.rect)
+                            .foregroundStyle(todo.completed ? .gray : .accentColor)
+                            .contentTransition(.symbolEffect(.replace))
+                    })
+                    
+                    Text(todo.content)
+                        .strikethrough(todo.completed)
+                        .foregroundStyle(todo.completed ? .gray : .primary)
+                } else {
+                    TextField(text: $localText) {
+                        Text(todo.content)
+                    }
+                    
+                    .onChange(of: localText) { _,newValue in
+                        textUpdate[todo.id] = newValue
+                    }
+                    .onSubmit {
+                        viewModel.updateTodo(id: todo.id, content: localText, completed: todo.completed, categoryId: todo.categoryId)
+                    }
+                }
             }
         }
     }
