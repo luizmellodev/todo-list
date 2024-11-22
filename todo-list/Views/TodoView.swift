@@ -1,9 +1,3 @@
-//
-//  TodoView.swift
-//  todo-list
-//
-//  Created by Luiz Mello on 25/09/24.
-//
 import SwiftUI
 
 struct TodoView: View {
@@ -40,7 +34,48 @@ struct TodoView: View {
                             viewModel.deleteTodos(at: indexSet, in: category)
                         }
                     }
-                    .id(category.id)
+                    
+                    ForEach(viewModel.categories) { category in
+                        Section(header: Text(category.name)) {
+                            ForEach(category.todos) { todo in
+                                TodoRowView(
+                                    todo: todo,
+                                    editMode: $editMode,
+                                    viewModel: viewModel,
+                                    textUpdate: $textFieldUpdates
+                                )
+                                .id(todo.id)
+                            }
+                            .onDelete { indexSet in
+                                viewModel.deleteTodos(at: indexSet, in: category)
+                            }
+                        }
+                        .id(category.id)
+                    }
+                }
+                .navigationTitle("Todo List")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(trailing: EditButton())
+                .environment(\.editMode, $editMode)
+                .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(action: {
+                            withAnimation {
+                                self.newTodoClicked.toggle()
+                                proxy.scrollTo(viewModel.categories.first?.todos.first?.id, anchor: .bottom)
+                            }
+                        }, label: {
+                            Image(systemName: "plus.circle.fill")
+                                .fontWeight(.light)
+                                .font(.system(size: 42))
+                        })
+                    }
+                }
+                .refreshable {
+                    viewModel.fetchCategories()
+                }
+                .onAppear {
+                    viewModel.fetchCategories()
                 }
                 .refreshable {
                     viewModel.fetchCategories()
