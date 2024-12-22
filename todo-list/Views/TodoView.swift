@@ -12,6 +12,7 @@ struct TodoView: View {
     @State private var selectedCategory: Category?
     @State private var editMode: EditMode = .inactive
     @State private var textFieldUpdates: [String: String] = [:]
+    @State private var hideCompleted = false
     
     let token: String
     
@@ -60,6 +61,15 @@ struct TodoView: View {
                 .navigationBarItems(trailing: EditButton())
                 .environment(\.editMode, $editMode)
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            withAnimation {
+                                hideCompleted.toggle()
+                            }
+                        }) {
+                            Text(hideCompleted ? "Show All" : "Hide Completed")
+                        }
+                    }
                     ToolbarItem(placement: .bottomBar) {
                         addButton
                     }
@@ -88,9 +98,9 @@ struct TodoView: View {
                     addTodoView
                 }
                 
-                ForEach(viewModel.categories) { category in
+                ForEach(viewModel.categories.filter { hasVisibleTodos(in: $0) }) { category in
                     Section(header: Text(category.name)) {
-                        ForEach(category.todos) { todo in
+                        ForEach(filteredTodos(in: category)) { todo in
                             TodoRowView(
                                 todo: todo,
                                 editMode: $editMode,
@@ -122,6 +132,18 @@ struct TodoView: View {
         .onAppear {
             viewModel.fetchCategories()
         }
+    }
+    
+    private func filteredTodos(in category: Category) -> [Todo] {
+        if hideCompleted {
+            return category.todos.filter { !$0.completed }
+        } else {
+            return category.todos
+        }
+    }
+    
+    private func hasVisibleTodos(in category: Category) -> Bool {
+        return filteredTodos(in: category).count > 0
     }
     
     private var addButton: some View {
@@ -296,7 +318,7 @@ struct TodoRowView: View {
             if editMode == .inactive {
                 Button(action: {
                     withAnimation {
-                        viewModel.updateTodo(id: todo.id, content: todo.content, username: "", completed: !todo.completed, categoryId: todo.categoryId, token: token)
+                        viewModel.updateTodo(id: todo.id, content: todo.content, username: todo.username, completed: !todo.completed, categoryId: todo.categoryId, token: token)
                     }
                 }) {
                     Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
