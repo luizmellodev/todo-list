@@ -11,8 +11,14 @@ import Combine
 protocol NetworkManagerProtocol {
     var baseURL: URL { get }
     
-    func fetch<T: Decodable>(from endpoint: String) -> AnyPublisher<T, NetworkError>
-    func create<T: Encodable>(to endpoint: String, body: T) -> AnyPublisher<Void, NetworkError>
-    func delete(from endpoint: String) -> AnyPublisher<Void, NetworkError>
-    func update<T: Encodable>(to endpoint: String, with body: T) -> AnyPublisher<Void, NetworkError>
+    func sendRequest<T: Decodable>(
+        _ endpoint: String,
+        method: String,
+        parameters: [String: Any]?,
+        authentication: String?,
+        token: String?,
+        body: Data?
+    ) -> AnyPublisher<T, NetworkError>
 }
+
+
