@@ -15,12 +15,18 @@
 		7916EE142CBC875C00827762 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EE132CBC875C00827762 /* NetworkManager.swift */; };
 		7916EE162CBC89BC00827762 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EE152CBC89BC00827762 /* NetworkError.swift */; };
 		7916EE182CBC9E6500827762 /* TodoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EE172CBC9E6500827762 /* TodoRequest.swift */; };
+		791D4A512D17A731003CCC2B /* LoginViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D4A502D17A731003CCC2B /* LoginViewState.swift */; };
+		795F669C2CF9641D003D497B /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795F669B2CF9641D003D497B /* RequestBuilder.swift */; };
+		795F669E2CF964D4003D497B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795F669D2CF964D4003D497B /* LoginView.swift */; };
+		795F66A02CF964E2003D497B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795F669F2CF964E2003D497B /* LoginViewModel.swift */; };
 		799323892CA35BA5005DF4BE /* todo_listApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799323882CA35BA5005DF4BE /* todo_listApp.swift */; };
 		7993238D2CA35BA6005DF4BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7993238C2CA35BA6005DF4BE /* Assets.xcassets */; };
 		799323902CA35BA6005DF4BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7993238F2CA35BA6005DF4BE /* Preview Assets.xcassets */; };
 		7993239A2CA35BA7005DF4BE /* todo_listTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799323992CA35BA7005DF4BE /* todo_listTests.swift */; };
 		799323A42CA35BA7005DF4BE /* todo_listUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799323A32CA35BA7005DF4BE /* todo_listUITests.swift */; };
 		799323A62CA35BA7005DF4BE /* todo_listUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799323A52CA35BA7005DF4BE /* todo_listUITestsLaunchTests.swift */; };
+		79D2BDAF2CFF866D00E1CB58 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2BDAE2CFF866D00E1CB58 /* ContentView.swift */; };
+		79D2BDB12D0F49BF00E1CB58 /* DefaultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2BDB02D0F49BF00E1CB58 /* DefaultViewState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +55,10 @@
 		7916EE132CBC875C00827762 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		7916EE152CBC89BC00827762 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		7916EE172CBC9E6500827762 /* TodoRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRequest.swift; sourceTree = "<group>"; };
+		791D4A502D17A731003CCC2B /* LoginViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewState.swift; sourceTree = "<group>"; };
+		795F669B2CF9641D003D497B /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
+		795F669D2CF964D4003D497B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		795F669F2CF964E2003D497B /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		799323852CA35BA5005DF4BE /* todo-list.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "todo-list.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		799323882CA35BA5005DF4BE /* todo_listApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = todo_listApp.swift; sourceTree = "<group>"; };
 		7993238C2CA35BA6005DF4BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -58,6 +68,8 @@
 		7993239F2CA35BA7005DF4BE /* todo-listUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "todo-listUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		799323A32CA35BA7005DF4BE /* todo_listUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = todo_listUITests.swift; sourceTree = "<group>"; };
 		799323A52CA35BA7005DF4BE /* todo_listUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = todo_listUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		79D2BDAE2CFF866D00E1CB58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		79D2BDB02D0F49BF00E1CB58 /* DefaultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultViewState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +100,8 @@
 		7916EDFC2CA4D94900827762 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				791D4A502D17A731003CCC2B /* LoginViewState.swift */,
+				79D2BDB02D0F49BF00E1CB58 /* DefaultViewState.swift */,
 				7916EDFD2CA4D95200827762 /* Todo.swift */,
 				7916EDFF2CA4D95700827762 /* Category.swift */,
 				7916EE172CBC9E6500827762 /* TodoRequest.swift */,
@@ -98,7 +112,9 @@
 		7916EE042CA4D9E300827762 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				79D2BDAE2CFF866D00E1CB58 /* ContentView.swift */,
 				7916EE062CA4D9F800827762 /* TodoView.swift */,
+				795F669D2CF964D4003D497B /* LoginView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -107,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				7916EE0A2CA4DA2600827762 /* TodoViewModel.swift */,
+				795F669F2CF964E2003D497B /* LoginViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -116,6 +133,7 @@
 			children = (
 				7916EE112CBC872B00827762 /* NetworkManagerProtocol.swift */,
 				7916EE132CBC875C00827762 /* NetworkManager.swift */,
+				795F669B2CF9641D003D497B /* RequestBuilder.swift */,
 				7916EE152CBC89BC00827762 /* NetworkError.swift */,
 			);
 			path = Networking;
@@ -244,7 +262,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					799323842CA35BA5005DF4BE = {
 						CreatedOnToolsVersion = 15.4;
@@ -314,9 +332,15 @@
 				7916EE162CBC89BC00827762 /* NetworkError.swift in Sources */,
 				7916EE182CBC9E6500827762 /* TodoRequest.swift in Sources */,
 				7916EE072CA4D9F800827762 /* TodoView.swift in Sources */,
+				791D4A512D17A731003CCC2B /* LoginViewState.swift in Sources */,
 				7916EDFE2CA4D95200827762 /* Todo.swift in Sources */,
+				795F669C2CF9641D003D497B /* RequestBuilder.swift in Sources */,
+				79D2BDB12D0F49BF00E1CB58 /* DefaultViewState.swift in Sources */,
 				7916EE142CBC875C00827762 /* NetworkManager.swift in Sources */,
 				799323892CA35BA5005DF4BE /* todo_listApp.swift in Sources */,
+				795F66A02CF964E2003D497B /* LoginViewModel.swift in Sources */,
+				795F669E2CF964D4003D497B /* LoginView.swift in Sources */,
+				79D2BDAF2CFF866D00E1CB58 /* ContentView.swift in Sources */,
 				7916EE122CBC872B00827762 /* NetworkManagerProtocol.swift in Sources */,
 				7916EE002CA4D95700827762 /* Category.swift in Sources */,
 			);
@@ -490,6 +514,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -519,6 +544,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -535,7 +561,6 @@
 		799323AD2CA35BA7005DF4BE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -555,7 +580,6 @@
 		799323AE2CA35BA7005DF4BE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -575,7 +599,6 @@
 		799323B02CA35BA7005DF4BE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W795AQWUXY;
@@ -593,7 +616,6 @@
 		799323B12CA35BA7005DF4BE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W795AQWUXY;
