@@ -14,17 +14,17 @@ struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     
     var body: some View {
-        VStack {
-            switch viewModel.state {
-            case .loggedIn:
-                TodoView(token: viewModel.token?.access_token ?? "error_token")
-                
-            case .error(let message):
-                Text(message)
-                    .foregroundColor(.red)
-                    .padding()
-                
-            case .idle:
+        switch viewModel.state {
+        case .loggedIn:
+            TodoView(token: viewModel.token?.access_token ?? "error_token")
+            
+        case .error(let message):
+            Text(message)
+                .foregroundColor(.red)
+                .padding()
+            
+        case .idle:
+            VStack {
                 Group {
                     TextField("Username", text: $username)
                         .padding()
@@ -49,7 +49,6 @@ struct LoginView: View {
                 }
             }
         }
-        .padding()
     }
 }
 
