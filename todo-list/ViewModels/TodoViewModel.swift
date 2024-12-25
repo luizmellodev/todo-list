@@ -7,8 +7,9 @@
 
 import Foundation
 import Combine
+import WidgetKit
 
-class CategoriesViewModel: ObservableObject {
+class TodoViewModel: ObservableObject {
     
     @Published var categories: [Category] = []
     @Published var draggedTodo: Todo?
@@ -19,11 +20,14 @@ class CategoriesViewModel: ObservableObject {
     private let networkManager: NetworkManagerProtocol
     @Published var state: DefaultViewState = .loading
     
-        
+    private var cancellables = Set<AnyCancellable>()
+    private let networkManager: NetworkManagerProtocol
+            
     init(networkManager: NetworkManagerProtocol = NetworkManager.shared) {
         self.networkManager = networkManager
     }
     
+    // MARK: - Fetch Categories
     func fetchCategories(token: String) {
         networkManager.sendRequest("/categories_with_todos", method: "GET", parameters: nil, authentication: nil, token: token, body: nil)
             .receive(on: DispatchQueue.main)
@@ -34,9 +38,11 @@ class CategoriesViewModel: ObservableObject {
             }
             .assign(to: &$categories)
         
+        self.updateWidget()
         self.state = .requestSucceeded
     }
     
+    // MARK: - Create Todo
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) {
         let newTodo = Todo(
             id: UUID().uuidString,
@@ -55,14 +61,10 @@ class CategoriesViewModel: ObservableObject {
         networkManager.sendRequest("/todos", method: "POST", parameters: nil, authentication: nil, token: token, body: jsonData)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print("Error creating todo: \(error)")
-                }
-            }, receiveValue: { (createdTodo: Todo) in
+                self.handleCompletion(completion)
+            }, receiveValue: { createdTodo in
                 self.appendTodoToCategory(createdTodo, categoryId: categoryId)
+                self.updateWidget()
             })
             .store(in: &cancellables)
     }
@@ -119,7 +121,7 @@ class CategoriesViewModel: ObservableObject {
     func deleteTodos(at offsets: IndexSet, in category: Category) {
         guard let categoryIndex = categories.firstIndex(where: { $0.id == category.id }) else { return }
         
-        for index in offsets {
+        offsets.forEach { index in
             let todo = categories[categoryIndex].todos[index]
             guard let url = URL(string: "\(baseURL)/todos/\(todo.id)") else {
                 print("Invalid URL for deleting todo")
@@ -145,6 +147,7 @@ class CategoriesViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Update Todo
     func updateTodo(id: String, content: String?, username: String?, completed: Bool?, categoryId: String?, token: String) {
         let updateRequest = TodoRequest(content: content, completed: completed, categoryId: categoryId)
         
@@ -156,12 +159,8 @@ class CategoriesViewModel: ObservableObject {
         networkManager.sendRequest("/todos/\(id)", method: "PUT", parameters: nil, authentication: nil, token: token, body: jsonData)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    self.fetchCategories(token: token)
-                case .failure(let error):
-                    print("Error updating todo: \(error)")
-                }
+                self.handleCompletion(completion)
+                self.fetchCategories(token: token)
             }, receiveValue: { (todo: Todo) in
                 print("Updated Todo: \(todo)")
             })
@@ -169,7 +168,22 @@ class CategoriesViewModel: ObservableObject {
     }
 }
 
-extension CategoriesViewModel {
+// MARK: - Helper Methods
+extension TodoViewModel {
+    private func handleCompletion(_ completion: Subscribers.Completion<NetworkError>) {
+        switch completion {
+        case .finished:
+            break
+        case .failure(let error):
+            handleError(error)
+        }
+    }
+    
+    private func handleError(_ error: Error) {
+        print("Request failed with error: \(error)")
+        state = .noConnection
+    }
+    
     private func appendTodoToCategory(_ todo: Todo, categoryId: String?) {
         guard let categoryId = categoryId else { return }
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryId }) {
@@ -184,6 +198,20 @@ extension CategoriesViewModel {
             if categories[categoryIndex].todos.isEmpty {
                 categories.remove(at: categoryIndex)
             }
+        }
+    }
+    
+    // MARK: - Widget Update
+    private func updateWidget() {
+        let incompleteTodos = categories.flatMap { $0.todos }.filter { !$0.completed }
+        let lastSevenTodos = Array(incompleteTodos.prefix(7))
+        saveTodosToAppStorage(lastSevenTodos)
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    private func saveTodosToAppStorage(_ todos: [Todo]) {
+        if let encoded = try? JSONEncoder().encode(todos) {
+            UserDefaults(suiteName: "group.luizmello.todolist")?.set(encoded, forKey: "todos")
         }
     }
 }

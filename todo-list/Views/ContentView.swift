@@ -21,14 +21,10 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            if let savedToken = getToken() {
+            if let savedToken = loginViewModel.getToken() {
                 loginViewModel.verifyToken(token: savedToken)
             }
         }
-    }
-
-    private func getToken() -> String? {
-        return UserDefaults.standard.string(forKey: "access_token")
     }
 }
 

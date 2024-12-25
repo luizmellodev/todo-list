@@ -95,7 +95,7 @@ struct TodoView: View {
         ScrollViewReader { proxy in
             List {
                 if newTodoClicked {
-                    addTodoView
+                    AddTodoView(textFieldText: $textFieldText, selectedCategory: $selectedCategory, viewModel: viewModel, token: token)
                 }
                 
                 ForEach(viewModel.categories.filter { hasVisibleTodos(in: $0) }) { category in

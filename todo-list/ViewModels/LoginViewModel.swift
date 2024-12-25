@@ -57,4 +57,8 @@ class LoginViewModel: ObservableObject {
     private func saveToken(_ token: String) {
         UserDefaults.standard.set(token, forKey: "access_token")
     }
+    
+    internal func getToken() -> String? {
+        return UserDefaults.standard.string(forKey: "access_token")
+    }
 }
