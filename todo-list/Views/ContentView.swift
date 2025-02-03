@@ -10,14 +10,13 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var loginViewModel = LoginViewModel()
     @AppStorage("access_token") private var token: String = ""
-    @State var isLoggedIn: Bool = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if loginViewModel.isLoggedIn == true {
                 TodoView(token: token)
             } else {
-                LoginView()
+                LoginView(viewModel: loginViewModel)
             }
         }
         .onAppear {
@@ -27,6 +26,7 @@ struct ContentView: View {
         }
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
