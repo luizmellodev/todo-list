@@ -37,7 +37,7 @@ class LoginViewModel: ObservableObject {
             } receiveValue: { (token: TokenResponse) in
                 self.saveToken(token.access_token)
                 self.token = token
-                self.state = . loggedIn
+                self.state = .loggedIn
             }
             .store(in: &cancellables)
     }

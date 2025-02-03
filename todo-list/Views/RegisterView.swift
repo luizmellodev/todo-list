@@ -5,14 +5,6 @@
 //  Created by Luiz Mello on 03/02/25.
 //
 
-
-//
-//  RegisterView.swift
-//  todo-list
-//
-//  Created by Luiz Mello on 30/01/25.
-//
-
 import SwiftUI
 
 struct RegisterView: View {
@@ -20,6 +12,7 @@ struct RegisterView: View {
     @State private var password = ""
     @State private var name = ""
     @ObservedObject var viewModel: RegisterViewModel
+    @EnvironmentObject var coordinator: NavigationCoordinator
 
     var body: some View {
         VStack {
@@ -38,6 +31,7 @@ struct RegisterView: View {
             
             Button(action: {
                 viewModel.register(username: username, password : password, name: name)
+                coordinator.navigateTo(.login)
             }) {
                 Text("Register")
                     .padding()
