@@ -13,7 +13,8 @@ struct TodoView: View {
     @State private var editMode: EditMode = .inactive
     @State private var textFieldUpdates: [String: String] = [:]
     @State private var hideCompleted = false
-    
+    @State private var isCategoryEmpty = false
+
     let token: String
     
     var body: some View {
@@ -95,7 +96,19 @@ struct TodoView: View {
         ScrollViewReader { proxy in
             List {
                 if newTodoClicked {
-                    AddTodoView(textFieldText: $textFieldText, selectedCategory: $selectedCategory, viewModel: viewModel, token: token)
+                    AddTodoView(
+                        token: token,
+                        textFieldText: $textFieldText,
+                        selectedCategory: $selectedCategory,
+                        isCategoryEmpty: $isCategoryEmpty,
+                        viewModel: viewModel
+                    )
+                    if isCategoryEmpty {
+                        Text("Please select one category")
+                            .font(.caption2)
+                            .foregroundStyle(.red)
+                    }
+
                 }
                 
                 ForEach(viewModel.categories.filter { hasVisibleTodos(in: $0) }) { category in

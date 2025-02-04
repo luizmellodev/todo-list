@@ -10,9 +10,9 @@ import SwiftUI
 struct LoginView: View {
     @State private var username = ""
     @State private var password = ""
-    @ObservedObject var viewModel: LoginViewModel
     @State private var isShowingRegisterView = false
-
+    
+    @ObservedObject var viewModel: LoginViewModel
 
     var body: some View {
         VStack {

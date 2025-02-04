@@ -5,14 +5,17 @@
 //  Created by Luiz Mello on 25/12/24.
 //
 
-
 import SwiftUI
 
 struct AddTodoView: View {
+    
+    var token: String
     @Binding var textFieldText: String
     @Binding var selectedCategory: Category?
+    @Binding var isCategoryEmpty: Bool
+    
     @ObservedObject var viewModel: TodoViewModel
-    var token: String
+    
     
     var body: some View {
         HStack {
@@ -28,12 +31,25 @@ struct AddTodoView: View {
         }
         .onSubmit {
             guard let category = selectedCategory else {
-                print("Please select a category")
+                self.isCategoryEmpty = true
                 return
             }
             viewModel.createTodo(content: textFieldText, completed: false, categoryId: category.id, token: token)
             textFieldText = ""
             selectedCategory = nil
         }
+        .onChange(of: textFieldText) { oldValue, newValue in
+            withAnimation {
+                if isCategoryEmpty {
+                    isCategoryEmpty = false
+                }
+            }
+        }
     }
+}
+
+#Preview {
+    let viewModel = TodoViewModel()
+    
+    AddTodoView(token: "", textFieldText: .constant("sadasd"), selectedCategory: .constant(.init(id: "321", name: "Category", todos: [], createdAt: "")), isCategoryEmpty: .constant(false), viewModel: viewModel)
 }

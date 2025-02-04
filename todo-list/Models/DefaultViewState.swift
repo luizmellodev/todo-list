@@ -15,4 +15,6 @@ public enum DefaultViewState {
     case noConnection
     case paginatedLoading
     case emptyResult
+    case error(String)
+    case loggedIn
 }

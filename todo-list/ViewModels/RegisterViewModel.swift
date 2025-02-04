@@ -10,7 +10,7 @@ import Foundation
 import Combine
 
 class RegisterViewModel: ObservableObject {
-    @Published var state: LoginViewState = .idle
+    @Published var state: DefaultViewState = .started
     
     private var cancellables = Set<AnyCancellable>()
     private let networkManager = NetworkManager.shared

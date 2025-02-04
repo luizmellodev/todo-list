@@ -15,14 +15,15 @@ struct TokenResponse: Decodable {
 
 class LoginViewModel: ObservableObject {
     
-    @Published var isLoggedIn: Bool?
+    @Published var state: DefaultViewState = .started
     @Published var token: TokenResponse?
-    @Published var state: LoginViewState = .idle
     
     private var cancellables = Set<AnyCancellable>()
     private let networkManager = NetworkManager.shared
     
+    // Função de login
     func login(username: String, password: String) {
+        self.state = .loading
         let parameters = "username=\(username)&password=\(password)"
         
         networkManager.sendRequest("/token", method: "POST", parameters: nil, authentication: parameters, token: nil)
@@ -42,6 +43,7 @@ class LoginViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    // Função de verificação de token
     func verifyToken(token: String) {
         networkManager.sendRequest("/mytoken", method: "GET", parameters: nil, authentication: nil, token: token)
             .receive(on: DispatchQueue.main)
@@ -49,16 +51,17 @@ class LoginViewModel: ObservableObject {
                 print("Error fetching verifytoken: \(error)")
                 return Just(false)
             }
-            .map {$0}
-            .assign(to: &$isLoggedIn)
-        print("Token verificado: \(self.isLoggedIn ?? false)")
+            .map { $0 ? .loggedIn : .error("Token inválido") }
+            .assign(to: &$state)
+        
+        print("Token verificado: \(state)")
     }
     
     private func saveToken(_ token: String) {
         UserDefaults.standard.set(token, forKey: "access_token")
     }
     
-    internal func getToken() -> String? {
+    func getToken() -> String? {
         return UserDefaults.standard.string(forKey: "access_token")
     }
 }

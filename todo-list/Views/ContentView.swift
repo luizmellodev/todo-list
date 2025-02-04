@@ -11,19 +11,18 @@ struct ContentView: View {
     @StateObject private var loginViewModel = LoginViewModel()
     @AppStorage("access_token") private var token: String = ""
     @StateObject private var coordinator = NavigationCoordinator()
-    
+
     var body: some View {
         NavigationStack(path: $coordinator.navigationPath) {
-            if loginViewModel.isLoggedIn == true {
+            switch loginViewModel.state {
+            case .loggedIn:
                 TodoView(token: token)
-
-            } else {
+            case .error:
+                LoginView(viewModel: loginViewModel)
+            default:
                 LoginView(viewModel: loginViewModel)
             }
         }
-        .onChange(of: loginViewModel.isLoggedIn, { oldValue, newValue in
-            coordinator.navigateTo(.login)
-        })
         .onAppear {
             if let savedToken = loginViewModel.getToken() {
                 loginViewModel.verifyToken(token: savedToken)
