@@ -25,16 +25,3 @@ struct Todo: Identifiable, Codable {
     static let placeholder = Todo(id: UUID().uuidString, username: "username", content: "Placeholder Todo", completed: false, createdAt: "\(Date())", categoryId: "")
 }
 
-struct TodoRequest: Codable {
-    var content: String?
-    var completed: Bool?
-    var categoryId: String?
-    var createdAt: String?
-
-    enum CodingKeys: String, CodingKey {
-        case content, completed
-        case categoryId = "category_id"
-        case createdAt = "created_at"
-    }
-}
-
