@@ -55,7 +55,17 @@ struct TodoView: View {
 
     private func displayTodoList() -> some View {
         if let selectedCategory = viewModel.selectedCategory, selectedCategory.todos.isEmpty {
-            return AnyView(EmptyStateView())
+            return AnyView(
+                EmptyStateView()
+                    .sheet(isPresented: $newTodoClicked) {
+                        AddTodoView(
+                            token: token,
+                            textFieldText: $textFieldText,
+                            selectedCategory: $viewModel.selectedCategory,
+                            viewModel: viewModel
+                        ).padding(.horizontal).presentationDetents([.height(100)])
+                    }
+            )
         } else {
             return AnyView(todoListView)
         }
@@ -71,20 +81,21 @@ struct TodoView: View {
                     viewModel: viewModel
                 )
             }
-            
+
             let filteredCategories = viewModel.selectedCategory != nil ? [viewModel.selectedCategory!] : viewModel.categories
-            
-            ForEach(filteredCategories.filter { hasVisibleTodos(in: $0) }, id: \.id) { category in
-                if let index = viewModel.categories.firstIndex(where: { $0.id == category.id }) {
+
+            ForEach(viewModel.categories.indices, id: \.self) { index in
+                let category = viewModel.categories[index]
+
+                if hasVisibleTodos(in: category), filteredCategories.contains(where: { $0.id == category.id }) {
                     TodoSection(
-                        hideCompleted: hideCompleted,
                         token: token,
                         textFieldUpdates: $textFieldUpdates,
                         editMode: $editMode,
                         category: $viewModel.categories[index]
                     )
-                        .id(category.id)
-                        .environmentObject(viewModel)
+                    .id(category.id)
+                    .environmentObject(viewModel)
                 }
             }
         }
