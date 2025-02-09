@@ -37,6 +37,7 @@
 		7997A2D02D582FBF007B670C /* TodoSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A2CF2D582FBF007B670C /* TodoSection.swift */; };
 		7997A2D32D582FE2007B670C /* CategoryChipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A2D22D582FE2007B670C /* CategoryChipsView.swift */; };
 		7997A2D52D582FF0007B670C /* ToolbarButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A2D42D582FF0007B670C /* ToolbarButtons.swift */; };
+		7997A2D72D593F58007B670C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A2D62D593F58007B670C /* Logger.swift */; };
 		79A1E7742D5137220085F3B5 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1E7732D5137220085F3B5 /* RegisterView.swift */; };
 		79A1E7762D5137360085F3B5 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1E7752D5137360085F3B5 /* RegisterViewModel.swift */; };
 		79A1E7902D51377A0085F3B5 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1E78F2D51377A0085F3B5 /* UserResponse.swift */; };
@@ -118,6 +119,7 @@
 		7997A2CF2D582FBF007B670C /* TodoSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSection.swift; sourceTree = "<group>"; };
 		7997A2D22D582FE2007B670C /* CategoryChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryChipsView.swift; sourceTree = "<group>"; };
 		7997A2D42D582FF0007B670C /* ToolbarButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarButtons.swift; sourceTree = "<group>"; };
+		7997A2D62D593F58007B670C /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		79A1E7732D5137220085F3B5 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		79A1E7752D5137360085F3B5 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 		79A1E78F2D51377A0085F3B5 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 		7916EE102CBC84CF00827762 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				7997A2D62D593F58007B670C /* Logger.swift */,
 				7916EE112CBC872B00827762 /* NetworkManagerProtocol.swift */,
 				7916EE132CBC875C00827762 /* NetworkManager.swift */,
 				795F669B2CF9641D003D497B /* RequestBuilder.swift */,
@@ -509,6 +512,7 @@
 				7997A2B82D5404B0007B670C /* Category.swift in Sources */,
 				79A1E7762D5137360085F3B5 /* RegisterViewModel.swift in Sources */,
 				795F669C2CF9641D003D497B /* RequestBuilder.swift in Sources */,
+				7997A2D72D593F58007B670C /* Logger.swift in Sources */,
 				7997A2B22D53EAA1007B670C /* Chip.swift in Sources */,
 				79A1E7742D5137220085F3B5 /* RegisterView.swift in Sources */,
 				79D2BDB12D0F49BF00E1CB58 /* DefaultViewState.swift in Sources */,
