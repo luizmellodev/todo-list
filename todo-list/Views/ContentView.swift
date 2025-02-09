@@ -18,9 +18,9 @@ struct ContentView: View {
             case .loggedIn:
                 TodoView(token: token)
             case .error:
-                LoginView(viewModel: loginViewModel)
+                LoginView(coordinator: coordinator, viewModel: loginViewModel)
             default:
-                LoginView(viewModel: loginViewModel)
+                LoginView(coordinator: coordinator, viewModel: loginViewModel)
             }
         }
         .onAppear {

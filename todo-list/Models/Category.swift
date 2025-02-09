@@ -1,8 +1,8 @@
 //
-//  Category.swift
+//  CategoryDTO.swift
 //  todo-list
 //
-//  Created by Luiz Mello on 25/09/24.
+//  Created by Luiz Mello on 05/02/25.
 //
 
 import Foundation
@@ -10,12 +10,19 @@ import Foundation
 struct Category: Identifiable, Codable, Hashable {
     let id: String
     var name: String
-    var todos: [Todo]
     var createdAt: String
+    var todos: [Todo?]
     
     enum CodingKeys: String, CodingKey {
         case id, name, todos
         case createdAt = "created_at"
+    }
+    
+    init(id: String, name: String, todos: [Todo], createdAt: String) {
+        self.id = id
+        self.name = name
+        self.todos = todos
+        self.createdAt = createdAt
     }
     
     static func == (lhs: Category, rhs: Category) -> Bool {

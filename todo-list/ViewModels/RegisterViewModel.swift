@@ -34,7 +34,7 @@ class RegisterViewModel: ObservableObject {
                 }
             } receiveValue: { (response: UserResponse) in
                 print("User created: \(response.username)")
-                self.state = .loggedIn // Reset state or navigate to login
+                self.state = .loggedIn
             }
             .store(in: &cancellables)
     }

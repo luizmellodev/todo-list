@@ -5,25 +5,25 @@
 //  Created by Luiz Mello on 25/12/24.
 //
 
-
 import SwiftUI
 
 struct TodoRowView: View {
-    let todo: Todo
-    @Binding var editMode: EditMode
-    @ObservedObject var viewModel: TodoViewModel
-    @Binding var textUpdate: [String: String]
+    
+    @EnvironmentObject var viewModel: TodoViewModel
     
     @State private var localText: String
     
+    @Binding var todo: Todo
+    @Binding var editMode: EditMode
+    @Binding var textUpdate: [String: String]
+    
     var token: String
     
-    init(todo: Todo, editMode: Binding<EditMode>, viewModel: TodoViewModel, textUpdate: Binding<[String: String]>, token: String) {
-        self.todo = todo
+    init(todo: Binding<Todo>, editMode: Binding<EditMode>, textUpdate: Binding<[String: String]>, token: String) {
+        self._todo = todo
         self._editMode = editMode
-        self.viewModel = viewModel
         self._textUpdate = textUpdate
-        self._localText = State(initialValue: textUpdate.wrappedValue[todo.id] ?? todo.content)
+        self._localText = State(initialValue: textUpdate.wrappedValue[todo.id] ?? todo.wrappedValue.content)
         self.token = token
     }
     
@@ -41,6 +41,7 @@ struct TodoRowView: View {
                         .contentShape(Rectangle())
                         .foregroundStyle(todo.completed ? .gray : .accentColor)
                 }
+                .contentTransition(.symbolEffect(.replace))
                 
                 Text(todo.content)
                     .strikethrough(todo.completed)
@@ -51,7 +52,9 @@ struct TodoRowView: View {
                         textUpdate[todo.id] = newValue
                     }
                     .onSubmit {
-                        viewModel.updateTodo(id: todo.id, content: localText, username: "", completed: todo.completed, categoryId: todo.categoryId, token: token)
+                        withAnimation {
+                            viewModel.updateTodo(id: todo.id, content: localText, username: "", completed: todo.completed, categoryId: todo.categoryId, token: token)
+                        }
                     }
             }
         }

@@ -13,6 +13,9 @@ struct RegisterView: View {
     @State private var name = ""
     @ObservedObject var viewModel: RegisterViewModel
     @EnvironmentObject var coordinator: NavigationCoordinator
+    
+    @Environment(\.presentationMode) var presentationMode
+    
 
     var body: some View {
         VStack {
@@ -31,7 +34,12 @@ struct RegisterView: View {
             
             Button(action: {
                 viewModel.register(username: username, password : password, name: name)
-                coordinator.navigateTo(.login)
+                if viewModel.state == .loggedIn {
+                    coordinator.navigateTo(.login)
+                    presentationMode.wrappedValue.dismiss()
+
+                }
+                
             }) {
                 Text("Register")
                     .padding()

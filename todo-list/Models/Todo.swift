@@ -22,6 +22,29 @@ struct Todo: Identifiable, Codable {
         case createdAt = "created_at"
     }
     
-    static let placeholder = Todo(id: UUID().uuidString, username: "username", content: "Placeholder Todo", completed: false, createdAt: "\(Date())", categoryId: "")
+    init(
+        id: String,
+        username: String,
+        content: String,
+        completed: Bool,
+        createdAt: String,
+        categoryId: String? = nil
+    ) {
+        self.id = id
+        self.username = username
+        self.content = content
+        self.completed = completed
+        self.createdAt = createdAt
+        self.categoryId = categoryId
+    }
+    
+    static let placeholder = Todo(
+        id: UUID().uuidString,
+        username: "username",
+        content: "Placeholder Todo",
+        completed: false,
+        createdAt: "\(Date())",
+        categoryId: ""
+    )
 }
 

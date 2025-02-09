@@ -6,7 +6,7 @@
 //
 
 
-public enum DefaultViewState {
+public enum DefaultViewState: Equatable {
     case loading
     case started
     case dataChanged

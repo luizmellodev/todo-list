@@ -51,10 +51,12 @@ class LoginViewModel: ObservableObject {
                 print("Error fetching verifytoken: \(error)")
                 return Just(false)
             }
-            .map { $0 ? .loggedIn : .error("Token inválido") }
-            .assign(to: &$state)
-        
-        print("Token verificado: \(state)")
+            .map { $0 ? .loggedIn : .requestFailed }
+            .sink(receiveValue: { updatedState in
+                self.state = updatedState
+                print("Token verificado: \(self.state)")
+            })
+            .store(in: &cancellables)
     }
     
     private func saveToken(_ token: String) {

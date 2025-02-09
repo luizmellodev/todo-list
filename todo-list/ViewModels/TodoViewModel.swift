@@ -13,7 +13,8 @@ class TodoViewModel: ObservableObject {
     
     @Published var categories: [Category] = []
     @Published var state: DefaultViewState = .loading
-    
+    @Published var selectedCategory: Category?
+
     private var cancellables = Set<AnyCancellable>()
     private let networkManager: NetworkManagerProtocol
             
@@ -21,7 +22,7 @@ class TodoViewModel: ObservableObject {
         self.networkManager = networkManager
     }
     
-    // MARK: - Fetch Categories
+    // MARK: - Fetching Categories
     func fetchCategories(token: String) {
         networkManager.sendRequest("/categories_with_todos", method: "GET", parameters: nil, authentication: nil, token: token, body: nil)
             .receive(on: DispatchQueue.main)
@@ -30,20 +31,51 @@ class TodoViewModel: ObservableObject {
                 self.state = .noConnection
                 return Just([])
             }
+            .handleEvents(receiveOutput: { categories in
+                self.updateWidget()
+                self.state = .requestSucceeded
+                self.objectWillChange.send()
+
+                if let selectedCategoryId = self.selectedCategory?.id {
+                    self.selectedCategory = categories.first(where: { $0.id == selectedCategoryId })
+                }
+            })
             .assign(to: &$categories)
-        
-        self.updateWidget()
-        self.state = .requestSucceeded
     }
     
-    // MARK: - Create Todo
+    // MARK: - Category Operations
+    func createCategory(name: String, token: String) {
+        let newCategory = Category(
+            id: UUID().uuidString,
+            name: name,
+            todos: [],
+            createdAt: DateFormatter.formatDate(Date())
+        )
+        
+        guard let jsonData = try? JSONEncoder().encode(newCategory) else {
+            print("Error encoding new category")
+            return
+        }
+        
+        networkManager.sendRequest("/categories", method: "POST", parameters: nil, authentication: nil, token: token, body: jsonData)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                self.handleCompletion(completion, token: token)
+            }, receiveValue: { createdCategory in
+                self.categories.append(createdCategory)
+                self.updateWidget()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Todo Operations
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) {
         let newTodo = Todo(
             id: UUID().uuidString,
             username: "",
             content: content,
             completed: completed,
-            createdAt: ISO8601DateFormatter().string(from: Date()),
+            createdAt: DateFormatter.formatDate(Date()),
             categoryId: categoryId
         )
         
@@ -55,7 +87,7 @@ class TodoViewModel: ObservableObject {
         networkManager.sendRequest("/todos", method: "POST", parameters: nil, authentication: nil, token: token, body: jsonData)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                self.handleCompletion(completion)
+                self.handleCompletion(completion, token: token)
             }, receiveValue: { createdTodo in
                 self.appendTodoToCategory(createdTodo, categoryId: categoryId)
                 self.updateWidget()
@@ -63,26 +95,28 @@ class TodoViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // MARK: - Delete Todos
     func deleteTodos(at offsets: IndexSet, in category: Category, token: String) {
         guard let categoryIndex = categories.firstIndex(where: { $0.id == category.id }) else { return }
-        
-        offsets.forEach { index in
-            let todo = categories[categoryIndex].todos[index]
 
+        let todosToDelete = offsets.compactMap { index in
+            categories[categoryIndex].todos[index]
+        }
+
+        categories[categoryIndex].todos.remove(atOffsets: offsets)
+
+        for todo in todosToDelete {
             networkManager.sendRequest("/todos/\(todo.id)", method: "DELETE", parameters: nil, authentication: nil, token: token, body: nil)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    self.handleCompletion(completion)
-                }, receiveValue: { todo in
-                    self.removeTodoFromCategory(todo, at: categoryIndex)
+                    self.handleCompletion(completion, token: token)
+                }, receiveValue: { (_: Todo) in
+                    self.checkAndRemoveEmptyCategory(at: categoryIndex)
                     self.updateWidget()
                 })
                 .store(in: &cancellables)
         }
     }
     
-    // MARK: - Update Todo
     func updateTodo(id: String, content: String?, username: String?, completed: Bool?, categoryId: String?, token: String) {
         let updateRequest = TodoRequest(content: content, completed: completed, categoryId: categoryId)
         
@@ -94,21 +128,21 @@ class TodoViewModel: ObservableObject {
         networkManager.sendRequest("/todos/\(id)", method: "PUT", parameters: nil, authentication: nil, token: token, body: jsonData)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                self.handleCompletion(completion)
-                self.fetchCategories(token: token)
-            }, receiveValue: { (todo: Todo) in
-                print("Updated Todo: \(todo)")
+                self.handleCompletion(completion, token: token)
+            }, receiveValue: { (updatedTodo: Todo) in
+                print("Updated Todo: \(updatedTodo)")
             })
             .store(in: &cancellables)
     }
 }
 
-// MARK: - Helper Methods
+// MARK: - Private Helper Functions
 extension TodoViewModel {
-    private func handleCompletion(_ completion: Subscribers.Completion<NetworkError>) {
+    
+    private func handleCompletion(_ completion: Subscribers.Completion<NetworkError>, token: String) {
         switch completion {
         case .finished:
-            break
+            self.fetchCategories(token: token)
         case .failure(let error):
             handleError(error)
         }
@@ -116,30 +150,30 @@ extension TodoViewModel {
     
     private func handleError(_ error: Error) {
         print("Request failed with error: \(error)")
-        state = .noConnection
+        // TODO: Change to other status
+        state = .requestSucceeded
     }
     
     private func appendTodoToCategory(_ todo: Todo, categoryId: String?) {
         guard let categoryId = categoryId else { return }
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryId }) {
             categories[categoryIndex].todos.append(todo)
+            selectedCategory = categories[categoryIndex]
         }
     }
     
-    private func removeTodoFromCategory(_ todo: Todo, at categoryIndex: Int) {
-        if let todoIndex = categories[categoryIndex].todos.firstIndex(where: { $0.id == todo.id }) {
-            categories[categoryIndex].todos.remove(at: todoIndex)
-            
-            if categories[categoryIndex].todos.isEmpty {
-                categories.remove(at: categoryIndex)
-            }
+    private func checkAndRemoveEmptyCategory(at categoryIndex: Int) {
+        if categories[categoryIndex].todos.isEmpty {
+            categories.remove(at: categoryIndex)
         }
     }
     
-    // MARK: - Widget Update
     private func updateWidget() {
-        let incompleteTodos = categories.flatMap { $0.todos }.filter { !$0.completed }
+        let incompleteTodos = categories.flatMap { $0.todos.compactMap { $0 } }
+            .filter { !$0.completed }
+        
         let lastSevenTodos = Array(incompleteTodos.prefix(7))
+        
         saveTodosToAppStorage(lastSevenTodos)
         WidgetCenter.shared.reloadAllTimelines()
     }
@@ -148,5 +182,14 @@ extension TodoViewModel {
         if let encoded = try? JSONEncoder().encode(todos) {
             UserDefaults(suiteName: "group.luizmello.todolist")?.set(encoded, forKey: "todos")
         }
+    }
+}
+
+// MARK: - DateFormatter Extension
+public extension DateFormatter {
+    static func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.string(from: date)
     }
 }

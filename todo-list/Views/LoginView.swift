@@ -12,8 +12,17 @@ struct LoginView: View {
     @State private var password = ""
     @State private var isShowingRegisterView = false
     
+    @ObservedObject private var coordinator: NavigationCoordinator
     @ObservedObject var viewModel: LoginViewModel
 
+    public init(username: String = "", password: String = "", isShowingRegisterView: Bool = false, coordinator: NavigationCoordinator, viewModel: LoginViewModel) {
+        self.username = username
+        self.password = password
+        self.isShowingRegisterView = isShowingRegisterView
+        self.coordinator = coordinator
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         VStack {
             TextField("Username", text: $username)
@@ -50,6 +59,7 @@ struct LoginView: View {
             .foregroundColor(.blue)
             .sheet(isPresented: $isShowingRegisterView) {
                 RegisterView(viewModel: RegisterViewModel())
+                    .environmentObject(coordinator)
             }
         }
         .padding()
