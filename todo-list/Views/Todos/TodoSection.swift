@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TodoSection: View {
     
-    let hideCompleted: Bool
     let token: String
     
     @EnvironmentObject var viewModel: TodoViewModel
@@ -21,15 +20,14 @@ struct TodoSection: View {
     var body: some View {
         Section(header: Text(category.name)) {
             ForEach(category.todos.indices, id: \.self) { index in
-                
-                if let todo = category.todos[index] {
-                    TodoRowView(todo: Binding(
-                        get: { todo },
-                        set: { category.todos[index] = $0 }
-                    ), editMode: $editMode, textUpdate: $textFieldUpdates, token: token)
-                    .id(todo.id)
-                    .environmentObject(viewModel)
-                }
+                TodoRowView(
+                    todo: $category.todos[index],
+                    editMode: $editMode,
+                    textUpdate: $textFieldUpdates,
+                    token: token
+                )
+                .id(category.todos[index]?.id)
+                .environmentObject(viewModel)
             }
             .onDelete { indexSet in
                 viewModel.deleteTodos(at: indexSet, in: category, token: token)
