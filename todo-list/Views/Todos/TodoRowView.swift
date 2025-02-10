@@ -49,6 +49,7 @@ struct TodoRowView: View {
                         .onChange(of: localText) { _, newValue in
                             textUpdate[todo.id] = newValue
                         }
+                    
                         .onSubmit {
                             withAnimation {
                                 viewModel.updateTodo(id: todo.id, content: localText, username: "", completed: todo.completed, categoryId: todo.categoryId, token: token)

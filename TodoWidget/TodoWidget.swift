@@ -39,7 +39,7 @@ struct Provider: TimelineProvider {
         
         switch family {
         case .systemSmall, .systemMedium:
-            return Array(todos.prefix(3))
+            return Array(todos.prefix(4))
         case .systemLarge, .systemExtraLarge:
             return Array(todos.prefix(7))
         case .accessoryCircular, .accessoryRectangular, .accessoryInline:

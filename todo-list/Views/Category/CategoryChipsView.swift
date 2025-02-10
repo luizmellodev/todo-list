@@ -16,7 +16,7 @@ struct CategoryChipsView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                Chip(categories.isEmpty ? "Add your first category" : "Add", isSelected: true) {
+                Chip(categories.isEmpty ? "Add your first category" : "Add", isSelected: true, background: .black) {
                     showAddCategorySheet.toggle()
                 }
                 .padding(.horizontal, 5)

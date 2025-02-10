@@ -10,6 +10,7 @@ import SwiftUI
 struct ToolbarModifier: ViewModifier {
     @Binding var hideCompleted: Bool
     @Binding var newTodoClicked: Bool
+    @Binding var editMode: EditMode
     
     func body(content: Content) -> some View {
         content
@@ -20,8 +21,9 @@ struct ToolbarModifier: ViewModifier {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
+                    Button(action: toggleEditMode) {
+                          Text(editMode == .active ? "Done" : "Edit")
+                      }                }
                 ToolbarItem(placement: .bottomBar) {
                     Button(action: toggleNewTodo) {
                         Image(systemName: "plus.circle.fill")
@@ -31,6 +33,11 @@ struct ToolbarModifier: ViewModifier {
             }
     }
     
+    private func toggleEditMode() {
+        withAnimation {
+            editMode = editMode == .active ? .inactive : .active
+        }
+    }
     private func toggleHideCompleted() {
         withAnimation {
             hideCompleted.toggle()
