@@ -38,7 +38,6 @@ struct TodoView: View {
         .onAppear { syncData() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
-                print("Mudando de fase =====")
                 syncData()
             }
         }
@@ -59,7 +58,6 @@ struct TodoView: View {
         .navigationBarTitleDisplayMode(.inline)
         .modifier(ToolbarModifier(hideCompleted: $hideCompleted, newTodoClicked: $newTodoClicked, editMode: $editMode))
         .refreshable { viewModel.fetchCategories(token: token) }
-        .onAppear { viewModel.fetchCategories(token: token) }
         .sheet(isPresented: $showAddCategorySheet) {
             AddCategoryView(viewModel: viewModel, token: token).presentationDetents([.height(200)])
         }
@@ -129,7 +127,6 @@ extension TodoView {
                 viewModel.updateTodo(
                     id: todo.id,
                     content: todo.content,
-                    username: todo.username,
                     completed: todo.completed,
                     categoryId: todo.categoryId,
                     token: token

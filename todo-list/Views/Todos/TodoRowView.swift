@@ -30,7 +30,7 @@ struct TodoRowView: View {
                 if editMode == .inactive {
                     Button(action: {
                         withAnimation {
-                            viewModel.updateTodo(id: todo.id, content: todo.content, username: todo.username, completed: !todo.completed, categoryId: todo.categoryId, token: token)
+                            viewModel.updateTodo(id: todo.id, content: todo.content, completed: !todo.completed, categoryId: todo.categoryId, token: token)
                         }
                     }) {
                         Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
@@ -52,7 +52,7 @@ struct TodoRowView: View {
                     
                         .onSubmit {
                             withAnimation {
-                                viewModel.updateTodo(id: todo.id, content: localText, username: "", completed: todo.completed, categoryId: todo.categoryId, token: token)
+                                viewModel.updateTodo(id: todo.id, content: localText, completed: todo.completed, categoryId: todo.categoryId, token: token)
                             }
                         }
                 }
