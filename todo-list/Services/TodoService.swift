@@ -12,7 +12,7 @@ protocol TodoServiceProtocol {
     func fetchCategories(token: String) -> AnyPublisher<[Category], NetworkError>
     func createCategory(name: String, token: String) -> AnyPublisher<Category, NetworkError>
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) -> AnyPublisher<Todo, NetworkError>
-    func deleteTodo(id: String, token: String) -> AnyPublisher<Void, NetworkError>
+    func deleteTodos(ids: [String], token: String) -> AnyPublisher<Void, NetworkError>
     func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?, token: String) -> AnyPublisher<Todo, NetworkError>
 }
 class TodoService: TodoServiceProtocol {
@@ -49,9 +49,15 @@ class TodoService: TodoServiceProtocol {
             .eraseToAnyPublisher()
     }
     
-    func deleteTodo(id: String, token: String) -> AnyPublisher<Void, NetworkError> {
-        return networkManager.sendRequest("/todos/\(id)", method: "DELETE", parameters: nil, authentication: nil, token: token, body: nil)
-            .map { (_: Todo) in () }
+    func deleteTodos(ids: [String], token: String) -> AnyPublisher<Void, NetworkError> {
+        let deleteRequests = ids.map { id in
+            self.networkManager.sendRequest("/todos/\(id)", method: "DELETE", parameters: nil, authentication: nil, token: token, body: nil)
+                .map { (_: Todo) in () }
+        }
+        
+        return Publishers.MergeMany(deleteRequests)
+            .collect()
+            .map { _ in }
             .eraseToAnyPublisher()
     }
     

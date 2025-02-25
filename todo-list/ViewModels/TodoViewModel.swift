@@ -22,7 +22,7 @@ class TodoViewModel: ObservableObject {
         self.todoService = todoService
     }
     
-    // MARK: - Fetching Categories
+    // MARK: - Categories
     func fetchCategories(token: String) {        
         todoService.fetchCategories(token: token)
             .receive(on: DispatchQueue.main)
@@ -36,6 +36,7 @@ class TodoViewModel: ObservableObject {
             }, receiveValue: { categories in
                 self.categories = categories
                 self.updateSelectedCategory(categories: categories)
+                self.updateWidget()
             })
             .store(in: &cancellables)
     }
@@ -46,7 +47,6 @@ class TodoViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Category Operations
     func createCategory(name: String, token: String) {
         todoService.createCategory(name: name, token: token)
             .receive(on: DispatchQueue.main)
@@ -63,7 +63,7 @@ class TodoViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // MARK: - Todo Operations
+    // MARK: - Todo
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) {
         todoService.createTodo(content: content, completed: completed, categoryId: categoryId, token: token)
             .receive(on: DispatchQueue.main)
@@ -86,23 +86,23 @@ class TodoViewModel: ObservableObject {
         let todosToDelete = offsets.compactMap { index in
             categories[categoryIndex].todos[index]
         }
+        
+        let idsToDelete = todosToDelete.compactMap { $0.id }
 
-        categories[categoryIndex].todos.remove(atOffsets: offsets)
-
-        for todo in todosToDelete {
-            todoService.deleteTodo(id: todo.id, token: token)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        self.state = .requestSucceeded
-                    case .failure:
-                        self.state = .noConnection
-                    }
-                }, receiveValue: { (_) in }
-                )
-                .store(in: &cancellables)
-        }
+        todoService.deleteTodos(ids: idsToDelete, token: token)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Todos deleted successfully")
+                    self.categories[categoryIndex].todos.remove(atOffsets: offsets)
+                case .failure(let error):
+                    print("Failed to delete todos: \(error)")
+                }
+            }, receiveValue: {
+                
+            })
+            .store(in: &cancellables)
     }
     
     func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?, token: String) {
