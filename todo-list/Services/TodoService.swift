@@ -50,14 +50,17 @@ class TodoService: TodoServiceProtocol {
     }
     
     func deleteTodos(ids: [String], token: String) -> AnyPublisher<Void, NetworkError> {
-        let deleteRequests = ids.map { id in
-            self.networkManager.sendRequest("/todos/\(id)", method: "DELETE", parameters: nil, authentication: nil, token: token, body: nil)
-                .map { (_: Todo) in () }
-        }
+        let requestBody = ["ids": ids]
         
-        return Publishers.MergeMany(deleteRequests)
-            .collect()
-            .map { _ in }
+        let bodyData: Data?
+        do {
+            bodyData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
+        } catch {
+            return Fail(error: .encodingError).eraseToAnyPublisher()
+        }
+
+        return self.networkManager.sendRequest("/todos/", method: "DELETE", parameters: nil, authentication: nil, token: token, body: bodyData)
+            .map { (_: [Todo]) in () }
             .eraseToAnyPublisher()
     }
     
