@@ -1,8 +1,8 @@
-# ToDoList
+# Todo-list
 
 ## 📌 Sobre o Projeto
 
-O **ToDoList** é um aplicativo simples para iOS desenvolvido para ajudar você a gerenciar suas tarefas do dia a dia de forma rápida e eficiente. Com um design clean e funcionalidades poderosas, ele permite organizar suas pendências de maneira prática.
+O **Todo-list** é um aplicativo simples para iOS desenvolvido para ajudar você a gerenciar suas tarefas do dia a dia de forma rápida e eficiente. Com um design clean e funcionalidades poderosas, ele permite organizar suas pendências de maneira prática.
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -42,5 +42,5 @@ Este projeto está sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para m
 
 ---
 
-Feito com ❤️ por [Seu Nome](https://github.com/luizmellodev)
+Feito com ❤️ por [Luiz Mello](https://github.com/luizmellodev)
 
