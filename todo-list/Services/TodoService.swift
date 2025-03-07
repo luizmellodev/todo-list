@@ -29,6 +29,7 @@ class TodoService: TodoServiceProtocol {
     
     func createCategory(name: String, token: String) -> AnyPublisher<Category, NetworkError> {
         let newCategory = Category(id: UUID().uuidString, name: name, todos: [], createdAt: DateFormatter.formatDate(Date()))
+        
         guard let jsonData = try? JSONEncoder().encode(newCategory) else {
             return Fail(error: NetworkError.decodingError)
                 .eraseToAnyPublisher()
@@ -39,7 +40,9 @@ class TodoService: TodoServiceProtocol {
     }
     
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) -> AnyPublisher<Todo, NetworkError> {
+        
         let newTodo = Todo(id: UUID().uuidString, username: "", content: content, completed: completed, createdAt: DateFormatter.formatDate(Date()), categoryId: categoryId)
+        
         guard let jsonData = try? JSONEncoder().encode(newTodo) else {
             return Fail(error: NetworkError.decodingError)
                 .eraseToAnyPublisher()

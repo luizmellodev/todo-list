@@ -40,6 +40,7 @@
 		7997A2D72D593F58007B670C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A2D62D593F58007B670C /* Logger.swift */; };
 		7997A31B2D6503AC007B670C /* CategoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A31A2D6503AC007B670C /* CategoryService.swift */; };
 		7997A31D2D6503BF007B670C /* TodoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A31C2D6503BF007B670C /* TodoService.swift */; };
+		7997A3472D6E2584007B670C /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7997A3462D6E2584007B670C /* LoginService.swift */; };
 		79A1E7742D5137220085F3B5 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1E7732D5137220085F3B5 /* RegisterView.swift */; };
 		79A1E7762D5137360085F3B5 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1E7752D5137360085F3B5 /* RegisterViewModel.swift */; };
 		79A1E7902D51377A0085F3B5 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1E78F2D51377A0085F3B5 /* UserResponse.swift */; };
@@ -124,6 +125,7 @@
 		7997A2D62D593F58007B670C /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		7997A31A2D6503AC007B670C /* CategoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryService.swift; sourceTree = "<group>"; };
 		7997A31C2D6503BF007B670C /* TodoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoService.swift; sourceTree = "<group>"; };
+		7997A3462D6E2584007B670C /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		79A1E7732D5137220085F3B5 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		79A1E7752D5137360085F3B5 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 		79A1E78F2D51377A0085F3B5 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
@@ -262,16 +264,16 @@
 		799323872CA35BA5005DF4BE /* todo-list */ = {
 			isa = PBXGroup;
 			children = (
-				7997A3192D6503AA007B670C /* Services */,
-				7997A2B02D53EA9C007B670C /* Components */,
 				79A1E7A92D5138E30085F3B5 /* NavigationCoordinator.swift */,
-				791D4A812D1A5436003CCC2B /* todo-list.entitlements */,
-				7916EE102CBC84CF00827762 /* Networking */,
-				7916EE052CA4D9EA00827762 /* ViewModels */,
-				7916EE042CA4D9E300827762 /* Views */,
 				7916EDFC2CA4D94900827762 /* Models */,
+				7916EE042CA4D9E300827762 /* Views */,
+				7916EE052CA4D9EA00827762 /* ViewModels */,
+				7997A2B02D53EA9C007B670C /* Components */,
+				7997A3192D6503AA007B670C /* Services */,
+				7916EE102CBC84CF00827762 /* Networking */,
 				799323882CA35BA5005DF4BE /* todo_listApp.swift */,
 				7993238C2CA35BA6005DF4BE /* Assets.xcassets */,
+				791D4A812D1A5436003CCC2B /* todo-list.entitlements */,
 				7993238E2CA35BA6005DF4BE /* Preview Content */,
 			);
 			path = "todo-list";
@@ -336,6 +338,7 @@
 		7997A3192D6503AA007B670C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				7997A3462D6E2584007B670C /* LoginService.swift */,
 				7997A31C2D6503BF007B670C /* TodoService.swift */,
 				7997A31A2D6503AC007B670C /* CategoryService.swift */,
 			);
@@ -532,6 +535,7 @@
 				79A1E7742D5137220085F3B5 /* RegisterView.swift in Sources */,
 				79D2BDB12D0F49BF00E1CB58 /* DefaultViewState.swift in Sources */,
 				7916EE142CBC875C00827762 /* NetworkManager.swift in Sources */,
+				7997A3472D6E2584007B670C /* LoginService.swift in Sources */,
 				7997A2D02D582FBF007B670C /* TodoSection.swift in Sources */,
 				79A1E7AA2D5138E30085F3B5 /* NavigationCoordinator.swift in Sources */,
 				799323892CA35BA5005DF4BE /* todo_listApp.swift in Sources */,
