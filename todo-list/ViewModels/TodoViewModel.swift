@@ -80,30 +80,29 @@ class TodoViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func deleteTodos(at offsets: IndexSet, in category: Category, token: String) {
-        guard let categoryIndex = categories.firstIndex(where: { $0.id == category.id }) else { return }
-
-        let todosToDelete = offsets.compactMap { index in
-            categories[categoryIndex].todos[index]
-        }
-        
-        let idsToDelete = todosToDelete.compactMap { $0.id }
-
-        todoService.deleteTodos(ids: idsToDelete, token: token)
+    func deleteTodos(ids: [String], token: String) {
+        todoService.deleteTodos(ids: ids, token: token)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     print("Todos deleted successfully")
-                    self.categories[categoryIndex].todos.remove(atOffsets: offsets)
+
+                    for categoryIndex in self.categories.indices {
+                        self.categories[categoryIndex].todos.removeAll { todo in
+                            guard let todo = todo else { return false }
+                            return ids.contains(todo.id)
+                        }
+                    }
+
                 case .failure(let error):
                     print("Failed to delete todos: \(error)")
                 }
-            }, receiveValue: {
-                
-            })
+            }, receiveValue: { _ in })
             .store(in: &cancellables)
     }
+    
+    
     
     func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?, token: String) {
         todoService.updateTodo(id: id, content: content, completed: completed, categoryId: categoryId, token: token)

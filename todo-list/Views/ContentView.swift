@@ -22,7 +22,7 @@ struct ContentView: View {
             default:
                 LoginView(coordinator: coordinator, viewModel: loginViewModel)
             }
-        }
+        }   
         .onAppear {
             if let savedToken = loginViewModel.getToken() {
                 loginViewModel.verifyToken(token: savedToken)

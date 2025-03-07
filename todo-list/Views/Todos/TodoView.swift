@@ -9,14 +9,15 @@ import SwiftUI
 
 struct TodoView: View {
     @StateObject private var viewModel = TodoViewModel()
-    
+
     @State private var newTodoClicked: Bool = false
     @State private var textFieldText: String = ""
     @State private var editMode: EditMode = .inactive
     @State private var textFieldUpdates: [String: String] = [:]
     @State private var hideCompleted = false
     @State private var showAddCategorySheet = false
-    
+    @State private var selectedTodoIDs: Set<String> = []
+
     @AppStorage("todos", store: UserDefaults(suiteName: "group.luizmello.todolist")) private var todosData: Data?
     @Environment(\.scenePhase) private var scenePhase
     
@@ -56,7 +57,13 @@ struct TodoView: View {
         .padding(.top, 20)
         .navigationTitle("Todo List")
         .navigationBarTitleDisplayMode(.inline)
-        .modifier(ToolbarModifier(hideCompleted: $hideCompleted, newTodoClicked: $newTodoClicked, editMode: $editMode))
+        .modifier(ToolbarModifier(
+                hideCompleted: $hideCompleted,
+                newTodoClicked: $newTodoClicked,
+                editMode: $editMode,
+                onDelete: deleteSelectedTodos
+            )
+        )
         .refreshable { viewModel.fetchCategories(token: token) }
         .sheet(isPresented: $showAddCategorySheet) {
             AddCategoryView(viewModel: viewModel, token: token).presentationDetents([.height(200)])
@@ -93,7 +100,8 @@ struct TodoView: View {
                         token: token,
                         textFieldUpdates: $textFieldUpdates,
                         editMode: $editMode,
-                        category: $viewModel.categories[index]
+                        category: $viewModel.categories[index],
+                        selectedTodoIDs: $selectedTodoIDs
                     )
                     .id(category.id)
                     .environmentObject(viewModel)
@@ -108,6 +116,11 @@ struct TodoView: View {
                 viewModel: viewModel
             ).padding(.horizontal).presentationDetents([.height(100)])
         }
+    }
+
+    private func deleteSelectedTodos() {
+        viewModel.deleteTodos(ids: Array(selectedTodoIDs), token: token)
+        selectedTodoIDs.removeAll()
     }
 
     private func hasVisibleTodos(in category: Category) -> Bool {
@@ -134,7 +147,6 @@ extension TodoView {
             }
         }
     }
-    
     
     private func shouldSyncWithBackend(_ storedTodos: [Todo]) -> Bool {
         let incompleteTodos = viewModel.categories.flatMap { $0.todos.compactMap { $0 } }

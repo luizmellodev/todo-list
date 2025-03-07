@@ -11,6 +11,7 @@ struct ToolbarModifier: ViewModifier {
     @Binding var hideCompleted: Bool
     @Binding var newTodoClicked: Bool
     @Binding var editMode: EditMode
+    var onDelete: () -> Void
     
     func body(content: Content) -> some View {
         content
@@ -25,6 +26,14 @@ struct ToolbarModifier: ViewModifier {
                           Text(editMode == .active ? "Done" : "Edit")
                       }                }
                 ToolbarItem(placement: .bottomBar) {
+                    if editMode == .active {
+                        Button(action: onDelete) {
+                            Image(systemName: "trash.circle.fill")
+                                .font(.system(size: 42))
+                                .foregroundStyle(.red)
+                        }
+                        .contentTransition(.symbolEffect(.replace))
+                    }
                     Button(action: toggleNewTodo) {
                         Image(systemName: "plus.circle.fill")
                             .font(.system(size: 42))
