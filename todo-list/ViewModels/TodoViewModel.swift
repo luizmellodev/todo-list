@@ -4,161 +4,192 @@
 //
 //  Created by Luiz Mello on 25/09/24.
 //
+
 import Foundation
 import Combine
+import WidgetKit
 
-class CategoriesViewModel: ObservableObject {
+class TodoViewModel: ObservableObject {
     
     @Published var categories: [Category] = []
-    @Published var draggedTodo: Todo?
-    
+    @Published var state: DefaultViewState = .loading
+    @Published var selectedCategory: Category?
+
     private var cancellables = Set<AnyCancellable>()
+    private let networkManager: NetworkManagerProtocol
+            
+    init(networkManager: NetworkManagerProtocol = NetworkManager.shared) {
+        self.networkManager = networkManager
+    }
     
-    private let baseURL = "http://localhost:8000"
-    
-    func fetchCategories() {
-        guard let url = URL(string: "\(baseURL)/categories_with_todos") else {
-            print("Invalid URL for fetching categories")
-            return
-        }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map(\.data)
-            .decode(type: [Category].self, decoder: JSONDecoder())
+    // MARK: - Fetching Categories
+    func fetchCategories(token: String) {
+        networkManager.sendRequest("/categories_with_todos", method: "GET", parameters: nil, authentication: nil, token: token, body: nil)
             .receive(on: DispatchQueue.main)
             .catch { error -> Just<[Category]> in
                 print("Error fetching categories: \(error)")
+                self.state = .noConnection
                 return Just([])
             }
+            .handleEvents(receiveOutput: { categories in
+                self.updateWidget()
+                self.state = .requestSucceeded
+                self.objectWillChange.send()
+
+                if let selectedCategoryId = self.selectedCategory?.id {
+                    self.selectedCategory = categories.first(where: { $0.id == selectedCategoryId })
+                }
+            })
             .assign(to: &$categories)
     }
     
-    func createTodo(content: String, completed: Bool, categoryId: String?) {
-        guard let url = URL(string: "\(baseURL)/todos") else {
-            print("Invalid URL for creating todo")
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let newTodo = TodoRequest(
-            content: content,
-            completed: completed,
-            categoryId: categoryId,
-            createdAt: ISO8601DateFormatter().string(from: Date())
+    // MARK: - Category Operations
+    func createCategory(name: String, token: String) {
+        let newCategory = Category(
+            id: UUID().uuidString,
+            name: name,
+            todos: [],
+            createdAt: DateFormatter.formatDate(Date())
         )
         
-        do {
-            let jsonData = try JSONEncoder().encode(newTodo)
-            request.httpBody = jsonData
-        } catch {
-            print("Error encoding todo: \(error)")
+        guard let jsonData = try? JSONEncoder().encode(newCategory) else {
+            print("Error encoding new category")
             return
         }
         
-        URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap { (data, response) -> Data in
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
-                    throw URLError(.badServerResponse)
-                }
-                return data
-            }
-            .decode(type: Todo.self, decoder: JSONDecoder())
+        networkManager.sendRequest("/categories", method: "POST", parameters: nil, authentication: nil, token: token, body: jsonData)
             .receive(on: DispatchQueue.main)
-            .catch { error -> Just<Todo> in
-                print("Error creating todo: \(error)")
-                return Just(Todo(id: "", content: "", completed: false, categoryId: "", createdAt: Date().description))
-            }
-            .sink(receiveValue: { [weak self] newTodo in
-                if newTodo.id.isEmpty {
-                    print("Failed to create todo: no id returned from the server")
-                    return
-                }
-                if let categoryIndex = self?.categories.firstIndex(where: { $0.id == categoryId }) {
-                    self?.categories[categoryIndex].todos.append(newTodo)
-                }
+            .sink(receiveCompletion: { completion in
+                self.handleCompletion(completion, token: token)
+            }, receiveValue: { createdCategory in
+                self.categories.append(createdCategory)
+                self.updateWidget()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Todo Operations
+    func createTodo(content: String, completed: Bool, categoryId: String?, token: String) {
+        let newTodo = Todo(
+            id: UUID().uuidString,
+            username: "",
+            content: content,
+            completed: completed,
+            createdAt: DateFormatter.formatDate(Date()),
+            categoryId: categoryId
+        )
+        
+        guard let jsonData = try? JSONEncoder().encode(newTodo) else {
+            print("Error encoding new todo")
+            return
+        }
+        
+        networkManager.sendRequest("/todos", method: "POST", parameters: nil, authentication: nil, token: token, body: jsonData)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                self.handleCompletion(completion, token: token)
+            }, receiveValue: { createdTodo in
+                self.appendTodoToCategory(createdTodo, categoryId: categoryId)
+                self.updateWidget()
             })
             .store(in: &cancellables)
     }
     
-    func updateTodoById(id: String, content: String?, completed: Bool?, categoryId: String?, createdAt: String?) {
-        guard let url = URL(string: "\(baseURL)/todos/\(id)") else {
-            print("Invalid URL for updating todo")
-            return
+    func deleteTodos(at offsets: IndexSet, in category: Category, token: String) {
+        guard let categoryIndex = categories.firstIndex(where: { $0.id == category.id }) else { return }
+
+        let todosToDelete = offsets.compactMap { index in
+            categories[categoryIndex].todos[index]
         }
+
+        categories[categoryIndex].todos.remove(atOffsets: offsets)
+
+        for todo in todosToDelete {
+            networkManager.sendRequest("/todos/\(todo.id)", method: "DELETE", parameters: nil, authentication: nil, token: token, body: nil)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    self.handleCompletion(completion, token: token)
+                }, receiveValue: { (_: Todo) in
+                    self.checkAndRemoveEmptyCategory(at: categoryIndex)
+                    self.updateWidget()
+                })
+                .store(in: &cancellables)
+        }
+    }
+    
+    func updateTodo(id: String, content: String?, username: String?, completed: Bool?, categoryId: String?, token: String) {
+        let updateRequest = TodoRequest(content: content, completed: completed, categoryId: categoryId)
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let updateTodoRequest = TodoRequest(
-            content: content,
-            completed: completed,
-            categoryId: categoryId,
-            createdAt: createdAt
-        )
-        
-        do {
-            let jsonData = try JSONEncoder().encode(updateTodoRequest)
-            request.httpBody = jsonData
-        } catch {
+        guard let jsonData = try? JSONEncoder().encode(updateRequest) else {
             print("Error encoding update request")
             return
         }
         
-        URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap { (data, response) -> Data in
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                    throw URLError(.badServerResponse)
-                }
-                return data
-            }
-            .decode(type: Todo.self, decoder: JSONDecoder())
+        networkManager.sendRequest("/todos/\(id)", method: "PUT", parameters: nil, authentication: nil, token: token, body: jsonData)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    print("Error updating todo: \(error)")
-                }
-            }, receiveValue: { [weak self] updatedTodo in
-                print("Todo updated successfully: \(updatedTodo)")
-                // Atualizar a categoria localmente, se necessário
-                if let index = self?.categories.firstIndex(where: { $0.todos.contains(where: { $0.id == id }) }),
-                   let todoIndex = self?.categories[index].todos.firstIndex(where: { $0.id == id }) {
-                    self?.categories[index].todos[todoIndex] = updatedTodo
-                }
+                self.handleCompletion(completion, token: token)
+            }, receiveValue: { (updatedTodo: Todo) in
+                print("Updated Todo: \(updatedTodo)")
             })
             .store(in: &cancellables)
     }
+}
+
+// MARK: - Private Helper Functions
+extension TodoViewModel {
     
-    func deleteTodos(at offsets: IndexSet, in category: Category) {
-        guard let categoryIndex = categories.firstIndex(where: { $0.id == category.id }) else { return }
-        
-        for index in offsets {
-            let todo = categories[categoryIndex].todos[index]
-            guard let url = URL(string: "\(baseURL)/todos/\(todo.id)") else {
-                print("Invalid URL for deleting todo")
-                return
-            }
-            var request = URLRequest(url: url)
-            request.httpMethod = "DELETE"
-            
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    print("Error deleting todo: \(error)")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                    DispatchQueue.main.async {
-                        self.categories[categoryIndex].todos.remove(at: index)
-                        if self.categories[categoryIndex].todos.isEmpty {
-                            self.categories.remove(at: categoryIndex)
-                        }
-                    }
-                }
-            }.resume()
+    private func handleCompletion(_ completion: Subscribers.Completion<NetworkError>, token: String) {
+        switch completion {
+        case .finished:
+            self.fetchCategories(token: token)
+        case .failure(let error):
+            handleError(error)
         }
     }
+    
+    private func handleError(_ error: Error) {
+        print("Request failed with error: \(error)")
+        // TODO: Change to other status
+        state = .requestSucceeded
+    }
+    
+    private func appendTodoToCategory(_ todo: Todo, categoryId: String?) {
+        guard let categoryId = categoryId else { return }
+        if let categoryIndex = categories.firstIndex(where: { $0.id == categoryId }) {
+            categories[categoryIndex].todos.append(todo)
+            selectedCategory = categories[categoryIndex]
+        }
+    }
+    
+    private func checkAndRemoveEmptyCategory(at categoryIndex: Int) {
+        if categories[categoryIndex].todos.isEmpty {
+            categories.remove(at: categoryIndex)
+        }
+    }
+    
+    private func updateWidget() {
+        let incompleteTodos = categories.flatMap { $0.todos.compactMap { $0 } }
+            .filter { !$0.completed }
+        
+        let lastSevenTodos = Array(incompleteTodos.prefix(7))
+        
+        saveTodosToAppStorage(lastSevenTodos)
+        WidgetCenter.shared.reloadAllTimelines()
+    }
 
+    private func saveTodosToAppStorage(_ todos: [Todo]) {
+        if let encoded = try? JSONEncoder().encode(todos) {
+            UserDefaults(suiteName: "group.luizmello.todolist")?.set(encoded, forKey: "todos")
+        }
+    }
+}
+
+// MARK: - DateFormatter Extension
+public extension DateFormatter {
+    static func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.string(from: date)
+    }
 }
