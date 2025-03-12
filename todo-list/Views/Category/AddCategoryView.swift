@@ -26,7 +26,7 @@ struct AddCategoryView: View {
             
             Button("Add") {
                 if !categoryName.isEmpty {
-                    viewModel.createCategory(name: categoryName, token: token)
+                    viewModel.createCategory(name: categoryName, token: token, completion: {_ in })
                     dismiss()
                 }
             }

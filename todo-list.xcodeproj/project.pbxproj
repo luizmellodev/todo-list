@@ -47,6 +47,23 @@
 		79A1E7AA2D5138E30085F3B5 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1E7A92D5138E30085F3B5 /* NavigationCoordinator.swift */; };
 		79D2BDAF2CFF866D00E1CB58 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2BDAE2CFF866D00E1CB58 /* ContentView.swift */; };
 		79D2BDB12D0F49BF00E1CB58 /* DefaultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2BDB02D0F49BF00E1CB58 /* DefaultViewState.swift */; };
+		79D7E3362D80798700391C82 /* TodoViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3352D80798700391C82 /* TodoViewModelTests.swift */; };
+		79D7E33B2D807A5300391C82 /* LoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E33A2D807A5300391C82 /* LoginViewModelTests.swift */; };
+		79D7E33F2D807B0600391C82 /* RegisterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E33E2D807B0600391C82 /* RegisterService.swift */; };
+		79D7E3432D807C7900391C82 /* RegisterViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3422D807C7900391C82 /* RegisterViewModelTests.swift */; };
+		79D7E3492D80E0EA00391C82 /* OnboardingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3482D80E0EA00391C82 /* OnboardingStep.swift */; };
+		79D7E34C2D80E1A500391C82 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E34B2D80E1A500391C82 /* WelcomeView.swift */; };
+		79D7E34E2D80E1B000391C82 /* CreateTodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E34D2D80E1B000391C82 /* CreateTodoView.swift */; };
+		79D7E3502D80E1BB00391C82 /* CreateCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E34F2D80E1BB00391C82 /* CreateCategoryView.swift */; };
+		79D7E3522D80E1C400391C82 /* OnboardingFinishedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3512D80E1C400391C82 /* OnboardingFinishedView.swift */; };
+		79D7E3542D80E55500391C82 /* PendingTodo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3532D80E55500391C82 /* PendingTodo.swift */; };
+		79D7E3562D80E79F00391C82 /* TodoUIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3552D80E79F00391C82 /* TodoUIState.swift */; };
+		79D7E3582D80E7B600391C82 /* OnboardingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3572D80E7B600391C82 /* OnboardingState.swift */; };
+		79D7E35A2D80E7C500391C82 /* MainTodoContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3592D80E7C500391C82 /* MainTodoContent.swift */; };
+		79D7E35C2D80E7D100391C82 /* TodoListContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E35B2D80E7D100391C82 /* TodoListContent.swift */; };
+		79D7E35E2D80E7DD00391C82 /* TodoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E35D2D80E7DD00391C82 /* TodoListView.swift */; };
+		79D7E3642D80E89500391C82 /* EmptyStateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3632D80E89500391C82 /* EmptyStateContent.swift */; };
+		79D7E3662D80E8AB00391C82 /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3652D80E8AB00391C82 /* OnboardingStepView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +149,23 @@
 		79A1E7A92D5138E30085F3B5 /* NavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		79D2BDAE2CFF866D00E1CB58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		79D2BDB02D0F49BF00E1CB58 /* DefaultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultViewState.swift; sourceTree = "<group>"; };
+		79D7E3352D80798700391C82 /* TodoViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewModelTests.swift; sourceTree = "<group>"; };
+		79D7E33A2D807A5300391C82 /* LoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelTests.swift; sourceTree = "<group>"; };
+		79D7E33E2D807B0600391C82 /* RegisterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterService.swift; sourceTree = "<group>"; };
+		79D7E3422D807C7900391C82 /* RegisterViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModelTests.swift; sourceTree = "<group>"; };
+		79D7E3482D80E0EA00391C82 /* OnboardingStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStep.swift; sourceTree = "<group>"; };
+		79D7E34B2D80E1A500391C82 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		79D7E34D2D80E1B000391C82 /* CreateTodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTodoView.swift; sourceTree = "<group>"; };
+		79D7E34F2D80E1BB00391C82 /* CreateCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCategoryView.swift; sourceTree = "<group>"; };
+		79D7E3512D80E1C400391C82 /* OnboardingFinishedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFinishedView.swift; sourceTree = "<group>"; };
+		79D7E3532D80E55500391C82 /* PendingTodo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTodo.swift; sourceTree = "<group>"; };
+		79D7E3552D80E79F00391C82 /* TodoUIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoUIState.swift; sourceTree = "<group>"; };
+		79D7E3572D80E7B600391C82 /* OnboardingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingState.swift; sourceTree = "<group>"; };
+		79D7E3592D80E7C500391C82 /* MainTodoContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTodoContent.swift; sourceTree = "<group>"; };
+		79D7E35B2D80E7D100391C82 /* TodoListContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListContent.swift; sourceTree = "<group>"; };
+		79D7E35D2D80E7DD00391C82 /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
+		79D7E3632D80E89500391C82 /* EmptyStateContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateContent.swift; sourceTree = "<group>"; };
+		79D7E3652D80E8AB00391C82 /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -146,6 +180,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		791D4A8C2D1A544E003CCC2B /* TodoWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (791D4A972D1A5450003CCC2B /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TodoWidget; sourceTree = "<group>"; };
+		79D7E3392D807A3500391C82 /* Mocks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Mocks; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +220,10 @@
 		7916EDFC2CA4D94900827762 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E3572D80E7B600391C82 /* OnboardingState.swift */,
+				79D7E3552D80E79F00391C82 /* TodoUIState.swift */,
+				79D7E3532D80E55500391C82 /* PendingTodo.swift */,
+				79D7E3482D80E0EA00391C82 /* OnboardingStep.swift */,
 				7997A2B72D5404B0007B670C /* Category.swift */,
 				79A1E78F2D51377A0085F3B5 /* UserResponse.swift */,
 				79D2BDB02D0F49BF00E1CB58 /* DefaultViewState.swift */,
@@ -197,6 +236,7 @@
 		7916EE042CA4D9E300827762 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E34A2D80E19600391C82 /* Onboarding */,
 				79D2BDAE2CFF866D00E1CB58 /* ContentView.swift */,
 				795F669D2CF964D4003D497B /* LoginView.swift */,
 				79A1E7732D5137220085F3B5 /* RegisterView.swift */,
@@ -290,6 +330,10 @@
 		799323982CA35BA7005DF4BE /* todo-listTests */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E3422D807C7900391C82 /* RegisterViewModelTests.swift */,
+				79D7E3352D80798700391C82 /* TodoViewModelTests.swift */,
+				79D7E33A2D807A5300391C82 /* LoginViewModelTests.swift */,
+				79D7E3392D807A3500391C82 /* Mocks */,
 				799323992CA35BA7005DF4BE /* todo_listTests.swift */,
 			);
 			path = "todo-listTests";
@@ -318,6 +362,9 @@
 		7997A2CA2D55A52A007B670C /* Todos */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E35D2D80E7DD00391C82 /* TodoListView.swift */,
+				79D7E35B2D80E7D100391C82 /* TodoListContent.swift */,
+				79D7E3592D80E7C500391C82 /* MainTodoContent.swift */,
 				7997A2CF2D582FBF007B670C /* TodoSection.swift */,
 				7916EE062CA4D9F800827762 /* TodoView.swift */,
 				791D4ADC2D1CCB3F003CCC2B /* AddTodoView.swift */,
@@ -338,11 +385,25 @@
 		7997A3192D6503AA007B670C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E33E2D807B0600391C82 /* RegisterService.swift */,
 				7997A3462D6E2584007B670C /* LoginService.swift */,
 				7997A31C2D6503BF007B670C /* TodoService.swift */,
 				7997A31A2D6503AC007B670C /* CategoryService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		79D7E34A2D80E19600391C82 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				79D7E3652D80E8AB00391C82 /* OnboardingStepView.swift */,
+				79D7E3632D80E89500391C82 /* EmptyStateContent.swift */,
+				79D7E3512D80E1C400391C82 /* OnboardingFinishedView.swift */,
+				79D7E34F2D80E1BB00391C82 /* CreateCategoryView.swift */,
+				79D7E34D2D80E1B000391C82 /* CreateTodoView.swift */,
+				79D7E34B2D80E1A500391C82 /* WelcomeView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -401,6 +462,9 @@
 			);
 			dependencies = (
 				799323972CA35BA7005DF4BE /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79D7E3392D807A3500391C82 /* Mocks */,
 			);
 			name = "todo-listTests";
 			productName = "todo-listTests";
@@ -518,21 +582,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79D7E3502D80E1BB00391C82 /* CreateCategoryView.swift in Sources */,
+				79D7E3642D80E89500391C82 /* EmptyStateContent.swift in Sources */,
+				79D7E33F2D807B0600391C82 /* RegisterService.swift in Sources */,
 				7997A31B2D6503AC007B670C /* CategoryService.swift in Sources */,
 				7997A2D32D582FE2007B670C /* CategoryChipsView.swift in Sources */,
 				7916EE0B2CA4DA2600827762 /* TodoViewModel.swift in Sources */,
 				7916EE162CBC89BC00827762 /* NetworkError.swift in Sources */,
+				79D7E34C2D80E1A500391C82 /* WelcomeView.swift in Sources */,
 				7916EE182CBC9E6500827762 /* TodoRequest.swift in Sources */,
 				791D4ADD2D1CCB3F003CCC2B /* AddTodoView.swift in Sources */,
+				79D7E34E2D80E1B000391C82 /* CreateTodoView.swift in Sources */,
+				79D7E3492D80E0EA00391C82 /* OnboardingStep.swift in Sources */,
+				79D7E35C2D80E7D100391C82 /* TodoListContent.swift in Sources */,
+				79D7E35A2D80E7C500391C82 /* MainTodoContent.swift in Sources */,
 				7916EE072CA4D9F800827762 /* TodoView.swift in Sources */,
+				79D7E3582D80E7B600391C82 /* OnboardingState.swift in Sources */,
 				791D4ADB2D1CCB36003CCC2B /* TodoRowView.swift in Sources */,
 				7916EDFE2CA4D95200827762 /* Todo.swift in Sources */,
 				7997A2B82D5404B0007B670C /* Category.swift in Sources */,
 				79A1E7762D5137360085F3B5 /* RegisterViewModel.swift in Sources */,
 				795F669C2CF9641D003D497B /* RequestBuilder.swift in Sources */,
+				79D7E3562D80E79F00391C82 /* TodoUIState.swift in Sources */,
+				79D7E3542D80E55500391C82 /* PendingTodo.swift in Sources */,
 				7997A2D72D593F58007B670C /* Logger.swift in Sources */,
 				7997A2B22D53EAA1007B670C /* Chip.swift in Sources */,
 				79A1E7742D5137220085F3B5 /* RegisterView.swift in Sources */,
+				79D7E3522D80E1C400391C82 /* OnboardingFinishedView.swift in Sources */,
+				79D7E3662D80E8AB00391C82 /* OnboardingStepView.swift in Sources */,
 				79D2BDB12D0F49BF00E1CB58 /* DefaultViewState.swift in Sources */,
 				7916EE142CBC875C00827762 /* NetworkManager.swift in Sources */,
 				7997A3472D6E2584007B670C /* LoginService.swift in Sources */,
@@ -543,6 +620,7 @@
 				79A1E7902D51377A0085F3B5 /* UserResponse.swift in Sources */,
 				7997A2D52D582FF0007B670C /* ToolbarButtons.swift in Sources */,
 				7997A2CE2D55C1D8007B670C /* EmptyStateView.swift in Sources */,
+				79D7E35E2D80E7DD00391C82 /* TodoListView.swift in Sources */,
 				795F669E2CF964D4003D497B /* LoginView.swift in Sources */,
 				79D2BDAF2CFF866D00E1CB58 /* ContentView.swift in Sources */,
 				7997A2C92D55A516007B670C /* AddCategoryView.swift in Sources */,
@@ -556,7 +634,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79D7E33B2D807A5300391C82 /* LoginViewModelTests.swift in Sources */,
 				7993239A2CA35BA7005DF4BE /* todo_listTests.swift in Sources */,
+				79D7E3432D807C7900391C82 /* RegisterViewModelTests.swift in Sources */,
+				79D7E3362D80798700391C82 /* TodoViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

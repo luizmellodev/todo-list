@@ -9,20 +9,19 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var loginViewModel = LoginViewModel()
-    @AppStorage("access_token") private var token: String = ""
     @StateObject private var coordinator = NavigationCoordinator()
+    
+    @AppStorage("access_token") private var token: String = ""
 
+    
     var body: some View {
-        NavigationStack(path: $coordinator.navigationPath) {
-            switch loginViewModel.state {
-            case .loggedIn:
+        NavigationStack {
+            if loginViewModel.state == .loggedIn {
                 TodoView(token: token)
-            case .error:
-                LoginView(coordinator: coordinator, viewModel: loginViewModel)
-            default:
-                LoginView(coordinator: coordinator, viewModel: loginViewModel)
+            } else {
+                LoginView(viewModel: loginViewModel, coordinator: coordinator)
             }
-        }   
+        }
         .onAppear {
             if let savedToken = loginViewModel.getToken() {
                 loginViewModel.verifyToken(token: savedToken)

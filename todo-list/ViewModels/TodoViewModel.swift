@@ -47,7 +47,7 @@ class TodoViewModel: ObservableObject {
         }
     }
     
-    func createCategory(name: String, token: String) {
+    func createCategory(name: String, token: String, completion: @escaping (String?) -> Void) {
         todoService.createCategory(name: name, token: token)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -59,6 +59,7 @@ class TodoViewModel: ObservableObject {
                 }
             }, receiveValue: { createdCategory in
                 self.categories.append(createdCategory)
+                completion(createdCategory.id)
             })
             .store(in: &cancellables)
     }
