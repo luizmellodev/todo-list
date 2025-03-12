@@ -12,11 +12,8 @@ struct RegisterView: View {
     @State private var password = ""
     @State private var name = ""
     @ObservedObject var viewModel: RegisterViewModel
-    @EnvironmentObject var coordinator: NavigationCoordinator
-    
     @Environment(\.presentationMode) var presentationMode
     
-
     var body: some View {
         VStack {
             TextField("Username", text: $username)
@@ -33,13 +30,7 @@ struct RegisterView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Button(action: {
-                viewModel.register(username: username, password : password, name: name)
-                if viewModel.state == .loggedIn {
-                    coordinator.navigateTo(.login)
-                    presentationMode.wrappedValue.dismiss()
-
-                }
-                
+                viewModel.register(username: username, password: password, name: name)
             }) {
                 Text("Register")
                     .padding()
@@ -49,6 +40,11 @@ struct RegisterView: View {
                     .cornerRadius(8)
             }
             .padding()
+            .onReceive(viewModel.$state) { newState in
+                if newState == .loggedIn {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
             
             if case .error(let message) = viewModel.state {
                 Text(message)
