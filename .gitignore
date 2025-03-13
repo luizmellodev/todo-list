@@ -1,2 +1,56 @@
-todo-list.xcodeproj/project.xcworkspace/xcuserdata/luizmello.xcuserdatad/UserInterfaceState.xcuserstate
+# Xcode
+*.xcworkspace/
+*.xcuserdata/
 *.xcuserstate
+*.xccheckout
+*.moved-aside
+*.xcscmblueprint
+
+# Build
+build/
+DerivedData/
+*.o
+*.d
+*.tbd
+*.obj
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+*.xcactivitylog
+
+# Editor
+*.swp
+*~.nib
+*~.storyboardc
+
+# Certificates
+*.mobileprovision
+*.cer
+*.p12
+*.crt
+*.pem
+
+# Archives
+*.xcarchive
