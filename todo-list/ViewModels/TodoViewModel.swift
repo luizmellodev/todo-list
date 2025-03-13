@@ -16,116 +16,97 @@ class TodoViewModel: ObservableObject {
     @Published var selectedCategory: Category?
 
     private var cancellables = Set<AnyCancellable>()
-    private let networkManager: NetworkManagerProtocol
-            
-    init(networkManager: NetworkManagerProtocol = NetworkManager.shared) {
-        self.networkManager = networkManager
+    private let todoService: TodoServiceProtocol
+    
+    init(todoService: TodoServiceProtocol = TodoService()) {
+        self.todoService = todoService
     }
     
-    // MARK: - Fetching Categories
-    func fetchCategories(token: String) {
-        networkManager.sendRequest("/categories_with_todos", method: "GET", parameters: nil, authentication: nil, token: token, body: nil)
-            .receive(on: DispatchQueue.main)
-            .catch { error -> Just<[Category]> in
-                print("Error fetching categories: \(error)")
-                self.state = .noConnection
-                return Just([])
-            }
-            .handleEvents(receiveOutput: { categories in
-                self.updateWidget()
-                self.state = .requestSucceeded
-                self.objectWillChange.send()
-
-                if let selectedCategoryId = self.selectedCategory?.id {
-                    self.selectedCategory = categories.first(where: { $0.id == selectedCategoryId })
-                }
-            })
-            .assign(to: &$categories)
-    }
-    
-    // MARK: - Category Operations
-    func createCategory(name: String, token: String) {
-        let newCategory = Category(
-            id: UUID().uuidString,
-            name: name,
-            todos: [],
-            createdAt: DateFormatter.formatDate(Date())
-        )
-        
-        guard let jsonData = try? JSONEncoder().encode(newCategory) else {
-            print("Error encoding new category")
-            return
-        }
-        
-        networkManager.sendRequest("/categories", method: "POST", parameters: nil, authentication: nil, token: token, body: jsonData)
+    // MARK: - Categories
+    func fetchCategories(token: String) {        
+        todoService.fetchCategories(token: token)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                self.handleCompletion(completion, token: token)
+                switch completion {
+                case .finished:
+                    self.state = .requestSucceeded
+                case .failure:
+                    self.state = .noConnection
+                }
+            }, receiveValue: { categories in
+                self.categories = categories
+                self.updateSelectedCategory(categories: categories)
+                self.updateWidget()
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func updateSelectedCategory(categories: [Category]) {
+        if let selectedCategoryId = self.selectedCategory?.id {
+            self.selectedCategory = categories.first(where: { $0.id == selectedCategoryId })
+        }
+    }
+    
+    func createCategory(name: String, token: String, completion: @escaping (String?) -> Void) {
+        todoService.createCategory(name: name, token: token)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    self.state = .requestSucceeded
+                case .failure:
+                    self.state = .noConnection
+                }
             }, receiveValue: { createdCategory in
                 self.categories.append(createdCategory)
-                self.updateWidget()
+                completion(createdCategory.id)
             })
             .store(in: &cancellables)
     }
-
-    // MARK: - Todo Operations
+    
+    // MARK: - Todo
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) {
-        let newTodo = Todo(
-            id: UUID().uuidString,
-            username: "",
-            content: content,
-            completed: completed,
-            createdAt: DateFormatter.formatDate(Date()),
-            categoryId: categoryId
-        )
-        
-        guard let jsonData = try? JSONEncoder().encode(newTodo) else {
-            print("Error encoding new todo")
-            return
-        }
-        
-        networkManager.sendRequest("/todos", method: "POST", parameters: nil, authentication: nil, token: token, body: jsonData)
+        todoService.createTodo(content: content, completed: completed, categoryId: categoryId, token: token)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                self.handleCompletion(completion, token: token)
+                switch completion {
+                case .finished:
+                    self.state = .requestSucceeded
+                case .failure:
+                    self.state = .noConnection
+                }
             }, receiveValue: { createdTodo in
                 self.appendTodoToCategory(createdTodo, categoryId: categoryId)
-                self.updateWidget()
             })
             .store(in: &cancellables)
     }
     
-    func deleteTodos(at offsets: IndexSet, in category: Category, token: String) {
-        guard let categoryIndex = categories.firstIndex(where: { $0.id == category.id }) else { return }
+    func deleteTodos(ids: [String], token: String) {
+        todoService.deleteTodos(ids: ids, token: token)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Todos deleted successfully")
 
-        let todosToDelete = offsets.compactMap { index in
-            categories[categoryIndex].todos[index]
-        }
+                    for categoryIndex in self.categories.indices {
+                        self.categories[categoryIndex].todos.removeAll { todo in
+                            guard let todo = todo else { return false }
+                            return ids.contains(todo.id)
+                        }
+                    }
 
-        categories[categoryIndex].todos.remove(atOffsets: offsets)
-
-        for todo in todosToDelete {
-            networkManager.sendRequest("/todos/\(todo.id)", method: "DELETE", parameters: nil, authentication: nil, token: token, body: nil)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    self.handleCompletion(completion, token: token)
-                }, receiveValue: { (_: Todo) in
-                    self.checkAndRemoveEmptyCategory(at: categoryIndex)
-                    self.updateWidget()
-                })
-                .store(in: &cancellables)
-        }
+                case .failure(let error):
+                    print("Failed to delete todos: \(error)")
+                }
+            }, receiveValue: { _ in })
+            .store(in: &cancellables)
     }
     
-    func updateTodo(id: String, content: String?, username: String?, completed: Bool?, categoryId: String?, token: String) {
-        let updateRequest = TodoRequest(content: content, completed: completed, categoryId: categoryId)
-        
-        guard let jsonData = try? JSONEncoder().encode(updateRequest) else {
-            print("Error encoding update request")
-            return
-        }
-        
-        networkManager.sendRequest("/todos/\(id)", method: "PUT", parameters: nil, authentication: nil, token: token, body: jsonData)
+    
+    
+    func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?, token: String) {
+        todoService.updateTodo(id: id, content: content, completed: completed, categoryId: categoryId, token: token)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 self.handleCompletion(completion, token: token)

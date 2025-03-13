@@ -19,14 +19,19 @@ class LoginViewModel: ObservableObject {
     @Published var token: TokenResponse?
     
     private var cancellables = Set<AnyCancellable>()
-    private let networkManager = NetworkManager.shared
+    private let loginService: LoginServiceProtocol
+    private let logoutService: LogoutServiceProtocol
     
-    // Função de login
+    init(loginService: LoginServiceProtocol = LoginService(),
+         logoutService: LogoutServiceProtocol = LogoutService()) {
+        self.loginService = loginService
+        self.logoutService = logoutService
+    }
+    
     func login(username: String, password: String) {
         self.state = .loading
-        let parameters = "username=\(username)&password=\(password)"
         
-        networkManager.sendRequest("/token", method: "POST", parameters: nil, authentication: parameters, token: nil)
+        loginService.login(username: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -35,7 +40,7 @@ class LoginViewModel: ObservableObject {
                 case .failure(let error):
                     self.state = .error(error.localizedDescription)
                 }
-            } receiveValue: { (token: TokenResponse) in
+            } receiveValue: { token in
                 self.saveToken(token.access_token)
                 self.token = token
                 self.state = .loggedIn
@@ -43,19 +48,19 @@ class LoginViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // Função de verificação de token
     func verifyToken(token: String) {
-        networkManager.sendRequest("/mytoken", method: "GET", parameters: nil, authentication: nil, token: token)
+        loginService.verifyToken(token: token)
             .receive(on: DispatchQueue.main)
-            .catch { error -> Just<Bool> in
-                print("Error fetching verifytoken: \(error)")
-                return Just(false)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self.state = .error(error.localizedDescription)
+                }
+            } receiveValue: { isValid in
+                self.state = isValid ? .loggedIn : .requestFailed
             }
-            .map { $0 ? .loggedIn : .requestFailed }
-            .sink(receiveValue: { updatedState in
-                self.state = updatedState
-                print("Token verificado: \(self.state)")
-            })
             .store(in: &cancellables)
     }
     
@@ -65,5 +70,19 @@ class LoginViewModel: ObservableObject {
     
     func getToken() -> String? {
         return UserDefaults.standard.string(forKey: "access_token")
+    }
+    
+    func logout(token: String) {
+        logoutService.logout(token: token)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished, .failure:
+                    // Always reset state and token on logout
+                    self.state = .loggedOut
+                    UserDefaults.standard.removeObject(forKey: "access_token")
+                }
+            } receiveValue: { _ in }
+            .store(in: &cancellables)
     }
 }

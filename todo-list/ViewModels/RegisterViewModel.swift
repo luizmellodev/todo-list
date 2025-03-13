@@ -10,20 +10,22 @@ import Foundation
 import Combine
 
 class RegisterViewModel: ObservableObject {
+    
     @Published var state: DefaultViewState = .started
+    var onSuccessfulRegister: ((String, String) -> Void)?
     
     private var cancellables = Set<AnyCancellable>()
     private let networkManager = NetworkManager.shared
+    private let registerService: RegisterServiceProtocol
+
+    
+    init(registerService: RegisterServiceProtocol = RegisterService()) {
+        self.registerService = registerService
+    }
     
     func register(username: String, password: String, name: String) {
-        let parameters = [
-            "username": username,
-            "password": password,
-            "name": name,
-            "disaled": "false"
-        ]
         
-        networkManager.sendRequest("/register", method: "POST", parameters: parameters, authentication: nil, token: nil)
+        registerService.register(username: username, password: password, name: name)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -35,6 +37,7 @@ class RegisterViewModel: ObservableObject {
             } receiveValue: { (response: UserResponse) in
                 print("User created: \(response.username)")
                 self.state = .loggedIn
+                self.onSuccessfulRegister?(username, password)
             }
             .store(in: &cancellables)
     }

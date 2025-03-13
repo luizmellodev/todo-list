@@ -17,4 +17,5 @@ public enum DefaultViewState: Equatable {
     case emptyResult
     case error(String)
     case loggedIn
+    case loggedOut
 }

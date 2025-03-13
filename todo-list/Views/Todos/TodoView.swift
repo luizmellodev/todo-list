@@ -8,27 +8,40 @@
 import SwiftUI
 
 struct TodoView: View {
-    @StateObject private var viewModel = TodoViewModel()
-    
-    @State private var newTodoClicked: Bool = false
-    @State private var textFieldText: String = ""
-    @State private var editMode: EditMode = .inactive
-    @State private var textFieldUpdates: [String: String] = [:]
-    @State private var hideCompleted = false
-    @State private var showAddCategorySheet = false
-    
     @AppStorage("todos", store: UserDefaults(suiteName: "group.luizmello.todolist")) private var todosData: Data?
-    @Environment(\.scenePhase) private var scenePhase
     
+    @StateObject private var viewModel = TodoViewModel()
+    @ObservedObject var loginViewModel: LoginViewModel
+    @StateObject private var onboardingState = OnboardingState()
+    
+    @State private var uiState = TodoUIState()
+    
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dismiss) private var dismiss
+
     let token: String
     
+    @State private var showingMenu = false
+    @State private var contentOffset: CGFloat = 50
+    @State private var contentOpacity: CGFloat = 0
+    
+    @ObservedObject var coordinator: NavigationCoordinator
+
     var body: some View {
         Group {
             switch viewModel.state {
             case .loading:
                 LoadingView()
             case .requestSucceeded:
-                contentView
+                mainContent
+                    .offset(y: contentOffset)
+                    .opacity(contentOpacity)
+                    .onAppear {
+                        withAnimation(.spring(dampingFraction: 0.7)) {
+                            contentOffset = 0
+                            contentOpacity = 1
+                        }
+                    }
             case .requestFailed, .emptyResult:
                 Text("Request failed.")
             default:
@@ -37,125 +50,97 @@ struct TodoView: View {
         }
         .onAppear { syncData() }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active {
-                print("Mudando de fase =====")
-                syncData()
-            }
+            if phase == .active { syncData() }
         }
-    }
-    
-    private var contentView: some View {
-        VStack {
-            CategoryChipsView(
-                selectedCategory: $viewModel.selectedCategory,
-                showAddCategorySheet: $showAddCategorySheet,
-                categories: viewModel.categories
-            )
-            
-            displayTodoList()
-        }
-        .padding(.top, 20)
-        .navigationTitle("Todo List")
-        .navigationBarTitleDisplayMode(.inline)
-        .modifier(ToolbarModifier(hideCompleted: $hideCompleted, newTodoClicked: $newTodoClicked, editMode: $editMode))
-        .refreshable { viewModel.fetchCategories(token: token) }
-        .onAppear { viewModel.fetchCategories(token: token) }
-        .sheet(isPresented: $showAddCategorySheet) {
-            AddCategoryView(viewModel: viewModel, token: token).presentationDetents([.height(200)])
-        }
-    }
-
-    private func displayTodoList() -> some View {
-        if let selectedCategory = viewModel.selectedCategory, selectedCategory.todos.isEmpty {
-            return AnyView(
-                EmptyStateView()
-                    .sheet(isPresented: $newTodoClicked) {
-                        AddTodoView(
-                            token: token,
-                            textFieldText: $textFieldText,
-                            selectedCategory: $viewModel.selectedCategory,
-                            viewModel: viewModel
-                        ).padding(.horizontal).presentationDetents([.height(100)])
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(role: .destructive, action: logout) {
+                        Label("Log Out", systemImage: "rectangle.portrait.and.arrow.right")
                     }
-            )
-        } else {
-            return AnyView(todoListView)
-        }
-    }
-
-    private var todoListView: some View {
-        List {
-            let filteredCategories = viewModel.selectedCategory != nil ? [viewModel.selectedCategory!] : viewModel.categories
-
-            ForEach(viewModel.categories.indices, id: \.self) { index in
-                let category = viewModel.categories[index]
-
-                if hasVisibleTodos(in: category), filteredCategories.contains(where: { $0.id == category.id }) {
-                    TodoSection(
-                        token: token,
-                        textFieldUpdates: $textFieldUpdates,
-                        editMode: $editMode,
-                        category: $viewModel.categories[index]
-                    )
-                    .id(category.id)
-                    .environmentObject(viewModel)
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .foregroundStyle(.primary)
                 }
             }
         }
-        .sheet(isPresented: $newTodoClicked) {
-            AddTodoView(
-                token: token,
-                textFieldText: $textFieldText,
-                selectedCategory: $viewModel.selectedCategory,
-                viewModel: viewModel
-            ).padding(.horizontal).presentationDetents([.height(100)])
-        }
-    }
-
-    private func hasVisibleTodos(in category: Category) -> Bool {
-        return category.todos.compactMap { $0 }.filter { !hideCompleted || !$0.completed }.count > 0
     }
 }
 
+// MARK: - View Extensions
+private extension TodoView {
+    @ViewBuilder
+    var mainContent: some View {
+        if viewModel.categories.isEmpty {
+            EmptyStateContent(
+                onboardingState: onboardingState,
+                viewModel: viewModel,
+                token: token
+            )
+        } else {
+            MainTodoContent(
+                viewModel: viewModel,
+                uiState: $uiState,
+                token: token,
+                onDeleteTodos: deleteSelectedTodos
+            )
+        }
+    }
+    
+    private func deleteSelectedTodos() {
+        viewModel.deleteTodos(ids: Array(uiState.selectedTodoIDs), token: token)
+        uiState.selectedTodoIDs.removeAll()
+    }
+}
+
+
 extension TodoView {
-    private func syncData() {
+    func syncData() {
         viewModel.fetchCategories(token: token)
-        
+        syncWidgetData()
+    }
+    
+    func syncWidgetData() {
         let storedTodos = fetchTodosFromStorage()
-        
         if shouldSyncWithBackend(storedTodos) {
             Logger.info("🔄 Enviando dados do widget para o backend...")
-            storedTodos.forEach { todo in
-                viewModel.updateTodo(
-                    id: todo.id,
-                    content: todo.content,
-                    username: todo.username,
-                    completed: todo.completed,
-                    categoryId: todo.categoryId,
-                    token: token
-                )
-            }
+            updateStoredTodos(storedTodos)
         }
     }
     
-    
-    private func shouldSyncWithBackend(_ storedTodos: [Todo]) -> Bool {
-        let incompleteTodos = viewModel.categories.flatMap { $0.todos.compactMap { $0 } }
+    func shouldSyncWithBackend(_ storedTodos: [Todo]) -> Bool {
+        let incompleteTodos = viewModel.categories
+            .flatMap { $0.todos.compactMap { $0 } }
             .filter { !$0.completed }
+            .prefix(7)
         
-        let lastSevenTodos = Array(incompleteTodos.prefix(7))
-
-        let isDifferent = !lastSevenTodos.allSatisfy { storedTodo in
+        return !incompleteTodos.allSatisfy { storedTodo in
             storedTodos.contains { $0.id == storedTodo.id && $0.completed == storedTodo.completed }
         }
-        
-        return isDifferent
     }
-
-    private func fetchTodosFromStorage() -> [Todo] {
-        if let data = todosData, let decoded = try? JSONDecoder().decode([Todo].self, from: data) {
-            return decoded
+    
+    func updateStoredTodos(_ todos: [Todo]) {
+        todos.forEach { todo in
+            viewModel.updateTodo(
+                id: todo.id,
+                content: todo.content,
+                completed: todo.completed,
+                categoryId: todo.categoryId,
+                token: token
+            )
         }
-        return []
+    }
+    
+    func fetchTodosFromStorage() -> [Todo] {
+        guard let data = todosData,
+              let decoded = try? JSONDecoder().decode([Todo].self, from: data)
+        else { return [] }
+        return decoded
+    }
+    
+    private func logout() {
+        loginViewModel.logout(token: token)
+        todosData = nil
+        coordinator.resetNavigation() 
     }
 }
