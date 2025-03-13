@@ -17,6 +17,7 @@ struct TodoListContent: View {
             if let selectedCategory = viewModel.selectedCategory,
                selectedCategory.todos.isEmpty {
                 EmptyStateView()
+                    .transition(.opacity)
                     .sheet(isPresented: $uiState.newTodoClicked) {
                         AddTodoView(
                             token: token,
@@ -25,7 +26,8 @@ struct TodoListContent: View {
                             viewModel: viewModel
                         )
                         .padding(.horizontal)
-                        .presentationDetents([.height(100)])
+                        .presentationDetents([.height(120)])
+                        .presentationDragIndicator(.visible)
                     }
             } else {
                 TodoListView(
@@ -33,7 +35,9 @@ struct TodoListContent: View {
                     uiState: $uiState,
                     token: token
                 )
+                .transition(.opacity)
             }
         }
+        .animation(.easeInOut, value: viewModel.selectedCategory?.todos.isEmpty)
     }
 }

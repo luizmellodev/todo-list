@@ -13,23 +13,29 @@ struct TodoListView: View {
     let token: String
     
     var body: some View {
-        List {
-            let categoriesToShow = viewModel.selectedCategory.map { [$0] } ?? viewModel.categories
-            
-            ForEach(categoriesToShow.filter { hasVisibleTodos(in: $0) }) { category in
-                if let categoryIndex = viewModel.categories.firstIndex(where: { $0.id == category.id }) {
-                    TodoSection(
-                        token: token,
-                        textFieldUpdates: $uiState.textFieldUpdates,
-                        editMode: $uiState.editMode,
-                        category: $viewModel.categories[categoryIndex],
-                        selectedTodoIDs: $uiState.selectedTodoIDs
-                    )
-                    .id(category.id)
-                    .environmentObject(viewModel)
+        ScrollView {
+            VStack(spacing: 20) {
+                let categoriesToShow = viewModel.selectedCategory.map { [$0] } ?? viewModel.categories
+                
+                ForEach(categoriesToShow.filter { hasVisibleTodos(in: $0) }) { category in
+                    if let categoryIndex = viewModel.categories.firstIndex(where: { $0.id == category.id }) {
+                        TodoSection(
+                            token: token,
+                            textFieldUpdates: $uiState.textFieldUpdates,
+                            editMode: $uiState.editMode,
+                            category: $viewModel.categories[categoryIndex],
+                            selectedTodoIDs: $uiState.selectedTodoIDs
+                        )
+                        .id(category.id)
+                        .environmentObject(viewModel)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
+                    }
                 }
             }
+            .padding(.vertical)
         }
+        .background(Color(UIColor.systemBackground))
         .sheet(isPresented: $uiState.newTodoClicked) {
             AddTodoView(
                 token: token,
@@ -38,7 +44,8 @@ struct TodoListView: View {
                 viewModel: viewModel
             )
             .padding(.horizontal)
-            .presentationDetents([.height(100)])
+            .presentationDetents([.height(120)])
+            .presentationDragIndicator(.visible)
         }
     }
     

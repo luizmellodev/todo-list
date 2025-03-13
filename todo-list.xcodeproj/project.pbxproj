@@ -64,6 +64,11 @@
 		79D7E35E2D80E7DD00391C82 /* TodoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E35D2D80E7DD00391C82 /* TodoListView.swift */; };
 		79D7E3642D80E89500391C82 /* EmptyStateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3632D80E89500391C82 /* EmptyStateContent.swift */; };
 		79D7E3662D80E8AB00391C82 /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E3652D80E8AB00391C82 /* OnboardingStepView.swift */; };
+		79D7E4882D834DF300391C82 /* DockMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E4872D834DF300391C82 /* DockMenu.swift */; };
+		79D7E4942D835E6B00391C82 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E4932D835E6B00391C82 /* CategoriesView.swift */; };
+		79D7E4962D835E7B00391C82 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E4952D835E7B00391C82 /* CategoryDetailView.swift */; };
+		79D7E4982D835EFD00391C82 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E4972D835EFD00391C82 /* CategoryCell.swift */; };
+		79D7E49A2D83650E00391C82 /* LogoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D7E4992D83650E00391C82 /* LogoutService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +171,11 @@
 		79D7E35D2D80E7DD00391C82 /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
 		79D7E3632D80E89500391C82 /* EmptyStateContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateContent.swift; sourceTree = "<group>"; };
 		79D7E3652D80E8AB00391C82 /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
+		79D7E4872D834DF300391C82 /* DockMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockMenu.swift; sourceTree = "<group>"; };
+		79D7E4932D835E6B00391C82 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		79D7E4952D835E7B00391C82 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
+		79D7E4972D835EFD00391C82 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		79D7E4992D83650E00391C82 /* LogoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -236,6 +246,7 @@
 		7916EE042CA4D9E300827762 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E4872D834DF300391C82 /* DockMenu.swift */,
 				79D7E34A2D80E19600391C82 /* Onboarding */,
 				79D2BDAE2CFF866D00E1CB58 /* ContentView.swift */,
 				795F669D2CF964D4003D497B /* LoginView.swift */,
@@ -376,6 +387,9 @@
 		7997A2D12D582FD6007B670C /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E4932D835E6B00391C82 /* CategoriesView.swift */,
+				79D7E4972D835EFD00391C82 /* CategoryCell.swift */,
+				79D7E4952D835E7B00391C82 /* CategoryDetailView.swift */,
 				7997A2D22D582FE2007B670C /* CategoryChipsView.swift */,
 				7997A2C82D55A516007B670C /* AddCategoryView.swift */,
 			);
@@ -385,6 +399,7 @@
 		7997A3192D6503AA007B670C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				79D7E4992D83650E00391C82 /* LogoutService.swift */,
 				79D7E33E2D807B0600391C82 /* RegisterService.swift */,
 				7997A3462D6E2584007B670C /* LoginService.swift */,
 				7997A31C2D6503BF007B670C /* TodoService.swift */,
@@ -603,15 +618,18 @@
 				7997A2B82D5404B0007B670C /* Category.swift in Sources */,
 				79A1E7762D5137360085F3B5 /* RegisterViewModel.swift in Sources */,
 				795F669C2CF9641D003D497B /* RequestBuilder.swift in Sources */,
+				79D7E4942D835E6B00391C82 /* CategoriesView.swift in Sources */,
 				79D7E3562D80E79F00391C82 /* TodoUIState.swift in Sources */,
 				79D7E3542D80E55500391C82 /* PendingTodo.swift in Sources */,
 				7997A2D72D593F58007B670C /* Logger.swift in Sources */,
+				79D7E49A2D83650E00391C82 /* LogoutService.swift in Sources */,
 				7997A2B22D53EAA1007B670C /* Chip.swift in Sources */,
 				79A1E7742D5137220085F3B5 /* RegisterView.swift in Sources */,
 				79D7E3522D80E1C400391C82 /* OnboardingFinishedView.swift in Sources */,
 				79D7E3662D80E8AB00391C82 /* OnboardingStepView.swift in Sources */,
 				79D2BDB12D0F49BF00E1CB58 /* DefaultViewState.swift in Sources */,
 				7916EE142CBC875C00827762 /* NetworkManager.swift in Sources */,
+				79D7E4982D835EFD00391C82 /* CategoryCell.swift in Sources */,
 				7997A3472D6E2584007B670C /* LoginService.swift in Sources */,
 				7997A2D02D582FBF007B670C /* TodoSection.swift in Sources */,
 				79A1E7AA2D5138E30085F3B5 /* NavigationCoordinator.swift in Sources */,
@@ -626,7 +644,9 @@
 				7997A2C92D55A516007B670C /* AddCategoryView.swift in Sources */,
 				7997A31D2D6503BF007B670C /* TodoService.swift in Sources */,
 				7916EE122CBC872B00827762 /* NetworkManagerProtocol.swift in Sources */,
+				79D7E4882D834DF300391C82 /* DockMenu.swift in Sources */,
 				7997A2CC2D55C1D1007B670C /* LoadingView.swift in Sources */,
+				79D7E4962D835E7B00391C82 /* CategoryDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

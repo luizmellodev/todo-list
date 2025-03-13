@@ -14,29 +14,40 @@ struct AddTodoView: View {
     
     @ObservedObject var viewModel: TodoViewModel
     
+    @FocusState private var isTextFieldFocused: Bool
+    @Environment(\.dismiss) private var dismiss
+    
     var isTextEmpty: Bool { textFieldText.isEmpty }
     
     var body: some View {
-        HStack {
-            TextField("Add new todo item", text: $textFieldText)
-            
-            Spacer()
-            Button(action: addTodo) {
-                Image(systemName: "checkmark.square.fill")
-                    .font(.title)
-                    .padding(3)
-                    .foregroundStyle(isTextEmpty ? .gray : .green)
+        VStack(spacing: 15) {
+            HStack(spacing: 12) {
+                TextField("Add new todo item", text: $textFieldText)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .focused($isTextFieldFocused)
+                
+                Button(action: addTodo) {
+                    Text("Add")
+                        .font(.headline)
+                        .foregroundStyle(isTextEmpty ? .gray : .blue)
+                }
+                .disabled(isTextEmpty)
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isTextEmpty)
             }
-            .disabled(isTextEmpty)
+            
+            if !isTextEmpty && selectedCategory == nil {
+                Text("Select at least one category")
+                    .foregroundStyle(.red)
+                    .font(.caption2)
+                    .opacity(selectedCategory != nil ? 0 : 1)
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .padding(20)
+        .onAppear {
+            isTextFieldFocused = true
         }
         .onSubmit(addTodo)
-        
-        if !isTextEmpty && selectedCategory == nil {
-            Text("Select at least one category")
-                .foregroundStyle(.red)
-                .font(.caption2)
-                .opacity(selectedCategory != nil ? 0 : 1)
-        }
     }
     
     private func addTodo() {
@@ -44,8 +55,23 @@ struct AddTodoView: View {
         
         viewModel.createTodo(content: textFieldText, completed: false, categoryId: category.id, token: token)
         
-        textFieldText = ""
-        selectedCategory = nil
+        withAnimation {
+            textFieldText = ""
+            selectedCategory = nil
+            dismiss()
+        }
+    }
+}
+
+struct CustomTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.primary.opacity(0.05))
+            )
     }
 }
 

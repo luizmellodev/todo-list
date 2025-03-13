@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct TodoView: View {
-    @StateObject private var viewModel = TodoViewModel()
-    @StateObject private var onboardingState = OnboardingState()
-    @State private var uiState = TodoUIState()
     @AppStorage("todos", store: UserDefaults(suiteName: "group.luizmello.todolist")) private var todosData: Data?
-    @Environment(\.scenePhase) private var scenePhase
     
+    @StateObject private var viewModel = TodoViewModel()
+    @ObservedObject var loginViewModel: LoginViewModel
+    @StateObject private var onboardingState = OnboardingState()
+    
+    @State private var uiState = TodoUIState()
+    
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dismiss) private var dismiss
+
     let token: String
     
+    @State private var showingMenu = false
+    @State private var contentOffset: CGFloat = 50
+    @State private var contentOpacity: CGFloat = 0
+    
+    @ObservedObject var coordinator: NavigationCoordinator
+
     var body: some View {
         Group {
             switch viewModel.state {
@@ -23,6 +34,14 @@ struct TodoView: View {
                 LoadingView()
             case .requestSucceeded:
                 mainContent
+                    .offset(y: contentOffset)
+                    .opacity(contentOpacity)
+                    .onAppear {
+                        withAnimation(.spring(dampingFraction: 0.7)) {
+                            contentOffset = 0
+                            contentOpacity = 1
+                        }
+                    }
             case .requestFailed, .emptyResult:
                 Text("Request failed.")
             default:
@@ -32,6 +51,18 @@ struct TodoView: View {
         .onAppear { syncData() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { syncData() }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(role: .destructive, action: logout) {
+                        Label("Log Out", systemImage: "rectangle.portrait.and.arrow.right")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .foregroundStyle(.primary)
+                }
+            }
         }
     }
 }
@@ -105,5 +136,11 @@ extension TodoView {
               let decoded = try? JSONDecoder().decode([Todo].self, from: data)
         else { return [] }
         return decoded
+    }
+    
+    private func logout() {
+        loginViewModel.logout(token: token)
+        todosData = nil
+        coordinator.resetNavigation() 
     }
 }

@@ -19,7 +19,12 @@ struct TodoSection: View {
     @Binding var selectedTodoIDs: Set<String>
 
     var body: some View {
-        Section(header: Text(category.name)) {
+        VStack(alignment: .leading, spacing: 15) {
+            Text(category.name)
+                .font(.title2.bold())
+                .foregroundStyle(.primary)
+                .padding(.horizontal)
+            
             ForEach(category.todos.indices, id: \.self) { index in
                 TodoRowView(
                     todo: $category.todos[index],
@@ -31,7 +36,11 @@ struct TodoSection: View {
                 .id(category.todos[index]?.id)
                 .environmentObject(viewModel)
             }
+            .padding(.horizontal)
         }
+        .padding(.vertical)
+        .background(Color(UIColor.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 15))
+        .padding(.horizontal)
     }
     
     private func filteredTodos(in category: Category) -> [Todo] {

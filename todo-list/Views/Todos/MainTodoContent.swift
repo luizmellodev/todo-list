@@ -13,29 +13,49 @@ struct MainTodoContent: View {
     let token: String
     let onDeleteTodos: () -> Void
     
+    @State private var isGridView = false
+    
     var body: some View {
-        VStack {
-            CategoryChipsView(
-                selectedCategory: $viewModel.selectedCategory,
-                showAddCategorySheet: $uiState.showAddCategorySheet,
-                categories: viewModel.categories
-            )
+        ZStack {
+            if isGridView {
+                CategoriesView(viewModel: viewModel)
+            } else {
+                VStack(spacing: 0) {
+                    VStack(spacing: 15) {
+                        CategoryChipsView(
+                            selectedCategory: $viewModel.selectedCategory,
+                            showAddCategorySheet: $uiState.showAddCategorySheet,
+                            categories: viewModel.categories
+                        )
+                        .padding(.horizontal)
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.2))
+                    }
+                    .background(
+                        Color(UIColor.systemBackground)
+                            .shadow(color: .black.opacity(0.05), radius: 5, y: 5)
+                    )
+                    
+                    // Content
+                    TodoListContent(
+                        viewModel: viewModel,
+                        uiState: $uiState,
+                        token: token
+                    )
+                }
+            }
             
-            TodoListContent(
-                viewModel: viewModel,
-                uiState: $uiState,
-                token: token
+            DockMenu(
+                editMode: $uiState.editMode,
+                showingNewTodo: $uiState.newTodoClicked,
+                isGridView: $isGridView,
+                onDelete: onDeleteTodos
             )
         }
         .padding(.top, 20)
         .navigationTitle("Todo List")
         .navigationBarTitleDisplayMode(.inline)
-        .modifier(ToolbarModifier(
-            hideCompleted: $uiState.hideCompleted,
-            newTodoClicked: $uiState.newTodoClicked,
-            editMode: $uiState.editMode,
-            onDelete: onDeleteTodos
-        ))
         .refreshable { viewModel.fetchCategories(token: token) }
         .sheet(isPresented: $uiState.showAddCategorySheet) {
             AddCategoryView(viewModel: viewModel, token: token)

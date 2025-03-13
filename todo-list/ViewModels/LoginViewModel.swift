@@ -20,9 +20,12 @@ class LoginViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     private let loginService: LoginServiceProtocol
+    private let logoutService: LogoutServiceProtocol
     
-    init(loginService: LoginServiceProtocol = LoginService()) {
+    init(loginService: LoginServiceProtocol = LoginService(),
+         logoutService: LogoutServiceProtocol = LogoutService()) {
         self.loginService = loginService
+        self.logoutService = logoutService
     }
     
     func login(username: String, password: String) {
@@ -68,5 +71,18 @@ class LoginViewModel: ObservableObject {
     func getToken() -> String? {
         return UserDefaults.standard.string(forKey: "access_token")
     }
+    
+    func logout(token: String) {
+        logoutService.logout(token: token)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished, .failure:
+                    // Always reset state and token on logout
+                    self.state = .loggedOut
+                    UserDefaults.standard.removeObject(forKey: "access_token")
+                }
+            } receiveValue: { _ in }
+            .store(in: &cancellables)
+    }
 }
-
