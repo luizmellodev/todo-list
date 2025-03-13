@@ -8,18 +8,16 @@
 import SwiftUI
 
 struct LoginView: View {
+    @ObservedObject var viewModel: LoginViewModel
+    @ObservedObject var coordinator: NavigationCoordinator
+    
     @State private var username = ""
     @State private var password = ""
     @State private var isShowingRegisterView = false
-    
-    @ObservedObject var viewModel: LoginViewModel
-    @ObservedObject var coordinator: NavigationCoordinator
-
     @State private var isAnimating = false
     @State private var showingFields = false
     @State private var logoOffset: CGFloat = -100
     @State private var fieldsOffset: CGFloat = 400
-
     @State private var isUsernameFocused = false
     @State private var isPasswordFocused = false
     
@@ -62,6 +60,7 @@ struct LoginView: View {
                             if username.isEmpty && !isUsernameFocused {
                                 Text("Username")
                                     .foregroundColor(.white.opacity(0.7))
+                                    .autocapitalization(.none)
                                     .padding(.leading, 20)
                             }
                             TextField("", text: $username)
