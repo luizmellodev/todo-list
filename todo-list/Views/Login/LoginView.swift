@@ -34,25 +34,9 @@ struct LoginView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 30) {
-                VStack(spacing: 10) {
-                    Image("newicon")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.white)
-                    
-                    HStack {
-                        Text("Tickr:")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                        Text("Todo list!")
-                            .font(.title)
-                            .fontWeight(.thin)
-                            .foregroundColor(.white)
-                    }
-                }
-                .offset(y: logoOffset)
-                .opacity(isAnimating ? 1 : 0)
+                LogoHeader()
+                    .offset(y: logoOffset)
+                    .opacity(isAnimating ? 1 : 0)
                 
                 if viewModel.state == .loggedIn {
                     Text("Bem-vindo(a)")
@@ -62,69 +46,18 @@ struct LoginView: View {
                             coordinator.navigateTo(.todoList)
                         }
                 } else {
-                    VStack(spacing: 20) {
-                        ZStack(alignment: .leading) {
-                            if username.isEmpty && !isUsernameFocused {
-                                Text("Username")
-                                    .foregroundColor(.white.opacity(0.7))
-                                    .autocapitalization(.none)
-                                    .padding(.leading, 20)
-                            }
-                            TextField("", text: $username)
-                                .textFieldStyle(ModernTextFieldStyle())
-                                .autocapitalization(.none)
-                                .onTapGesture {
-                                    isUsernameFocused = true
-                                }
-                                .onSubmit {
-                                    isUsernameFocused = false
-                                }
-                        }
-                        
-                        ZStack(alignment: .leading) {
-                            if password.isEmpty && !isPasswordFocused {
-                                Text("Password")
-                                    .foregroundColor(.white.opacity(0.7))
-                                    .padding(.leading, 20)
-                            }
-                            SecureField("", text: $password)
-                                .textFieldStyle(ModernTextFieldStyle())
-                                .onTapGesture {
-                                    isPasswordFocused = true
-                                }
-                                .onSubmit {
-                                    isPasswordFocused = false
-                                }
-                        }
-                        
-                        Button(action: {
+                    LoginForm(
+                        username: $username,
+                        password: $password,
+                        isUsernameFocused: $isUsernameFocused,
+                        isPasswordFocused: $isPasswordFocused,
+                        onLoginTap: {
                             withAnimation(.spring()) {
                                 viewModel.login(username: username, password: password)
                             }
-                        }) {
-                            Text("Login")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color.blue)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                                        )
-                                )
-                                .shadow(color: .blue.opacity(0.3), radius: 5, y: 2)
-                        }
-                        
-                        if case .error(let message) = viewModel.state {
-                            Text(message)
-                                .foregroundColor(.red)
-                                .font(.subheadline)
-                                .transition(.scale.combined(with: .opacity))
-                        }
-                    }
+                        },
+                        loginState: viewModel.state
+                    )
                     .offset(x: fieldsOffset)
                     
                     Button(action: {
