@@ -9,7 +9,6 @@ struct CategoryDetailView: View {
     
     var body: some View {
         GeometryReader { _ in
-            let size = UIScreen.main.bounds.size
             
             VStack(spacing: 0) {
                 RoundedRectangle(cornerRadius: animateContent ? 0 : 15)

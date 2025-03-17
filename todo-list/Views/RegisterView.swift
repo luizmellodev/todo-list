@@ -14,7 +14,6 @@ struct RegisterView: View {
     @ObservedObject var viewModel: RegisterViewModel
     @Environment(\.presentationMode) var presentationMode
     
-    // Added animation states
     @State private var formOffset: CGFloat = 400
     @State private var showForm = false
     @State private var isUsernameFocused = false
@@ -23,7 +22,6 @@ struct RegisterView: View {
     
     var body: some View {
         ZStack {
-            // Background gradient
             LinearGradient(
                 colors: [
                     Color(red: 0.1, green: 0.2, blue: 0.45),
@@ -35,7 +33,6 @@ struct RegisterView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 25) {
-                // Title
                 Text("Create Account")
                     .font(.title)
                     .fontWeight(.bold)
@@ -44,11 +41,11 @@ struct RegisterView: View {
                     .offset(y: showForm ? 0 : -30)
                 
                 VStack(spacing: 20) {
-                    // Username field
                     ZStack(alignment: .leading) {
                         if username.isEmpty && !isUsernameFocused {
                             Text("Username")
                                 .foregroundColor(.white.opacity(0.7))
+                                .autocapitalization(.none)
                                 .padding(.leading, 20)
                         }
                         TextField("", text: $username)
@@ -59,7 +56,6 @@ struct RegisterView: View {
                             }
                     }
                     
-                    // Name field
                     ZStack(alignment: .leading) {
                         if name.isEmpty && !isNameFocused {
                             Text("Name")
@@ -73,11 +69,11 @@ struct RegisterView: View {
                             }
                     }
                     
-                    // Password field
                     ZStack(alignment: .leading) {
                         if password.isEmpty && !isPasswordFocused {
                             Text("Password")
                                 .foregroundColor(.white.opacity(0.7))
+                                .autocapitalization(.none)
                                 .padding(.leading, 20)
                         }
                         SecureField("", text: $password)
@@ -87,7 +83,6 @@ struct RegisterView: View {
                             }
                     }
                     
-                    // Register button
                     Button(action: {
                         withAnimation(.spring()) {
                             viewModel.register(username: username, password: password, name: name)
@@ -109,7 +104,6 @@ struct RegisterView: View {
                             .shadow(color: .blue.opacity(0.3), radius: 5, y: 2)
                     }
                     
-                    // Error message
                     if case .error(let message) = viewModel.state {
                         Text(message)
                             .foregroundColor(.red)
@@ -117,7 +111,6 @@ struct RegisterView: View {
                             .transition(.scale.combined(with: .opacity))
                     }
                     
-                    // Cancel button
                     Button(action: {
                         withAnimation(.spring()) {
                             presentationMode.wrappedValue.dismiss()

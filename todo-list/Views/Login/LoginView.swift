@@ -35,14 +35,21 @@ struct LoginView: View {
             
             VStack(spacing: 30) {
                 VStack(spacing: 10) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 60))
+                    Image("newicon")
+                        .resizable()
+                        .frame(width: 50, height: 50)
                         .foregroundColor(.white)
                     
-                    Text("Todo List")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("Tickr:")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        Text("Todo list!")
+                            .font(.title)
+                            .fontWeight(.thin)
+                            .foregroundColor(.white)
+                    }
                 }
                 .offset(y: logoOffset)
                 .opacity(isAnimating ? 1 : 0)

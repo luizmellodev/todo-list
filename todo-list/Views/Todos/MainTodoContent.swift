@@ -37,7 +37,6 @@ struct MainTodoContent: View {
                             .shadow(color: .black.opacity(0.05), radius: 5, y: 5)
                     )
                     
-                    // Content
                     TodoListContent(
                         viewModel: viewModel,
                         uiState: $uiState,

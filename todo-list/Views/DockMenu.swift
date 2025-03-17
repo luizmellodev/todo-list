@@ -53,13 +53,13 @@ struct DockMenu: View {
             VStack {
                 Spacer()
                 
-                HStack(spacing: 15) { // Reduced spacing
+                HStack(spacing: 15) {
                     ForEach(visibleItems, id: \.self) { item in
                         if editMode == .inactive || item == .delete || item == .cancel {
                             Button(action: { handleAction(item) }) {
-                                VStack(spacing: 2) { // Reduced spacing
+                                VStack(spacing: 2) {
                                     Image(systemName: item.rawValue)
-                                        .font(.system(size: 20)) // Smaller icons
+                                        .font(.system(size: 20))
                                         .symbolRenderingMode(.hierarchical)
                                         .foregroundStyle(item.color)
                                     
@@ -67,14 +67,14 @@ struct DockMenu: View {
                                         Text(item.title)
                                             .font(.caption2)
                                             .foregroundColor(.white)
-                                            .padding(.horizontal, 6) // Reduced padding
-                                            .padding(.vertical, 2) // Reduced padding
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 2)
                                             .background(.ultraThinMaterial)
                                             .cornerRadius(6)
                                             .transition(.scale.combined(with: .opacity))
                                     }
                                 }
-                                .frame(width: 40, height: hoveredItem == item ? 55 : 40) // Smaller frame
+                                .frame(width: 40, height: hoveredItem == item ? 55 : 40)
                             }
                             .buttonStyle(.plain)
                             .onHover { isHovered in
@@ -82,12 +82,12 @@ struct DockMenu: View {
                                     hoveredItem = isHovered ? item : nil
                                 }
                             }
-                            .scaleEffect(hoveredItem == item ? 1.1 : 1.0) // Reduced scale effect
+                            .scaleEffect(hoveredItem == item ? 1.1 : 1.0)
                         }
                     }
                 }
-                .padding(.vertical, 12) // Reduced padding
-                .padding(.horizontal, 15) // Reduced padding
+                .padding(.vertical, 12)
+                .padding(.horizontal, 15)
                 .background(
                     RoundedRectangle(cornerRadius: 15)
                         .fill(.ultraThinMaterial)

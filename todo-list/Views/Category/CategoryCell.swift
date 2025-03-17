@@ -14,7 +14,6 @@ struct CategoryCell: View {
             content()
                 .shadow(color: .black.opacity(0.1), radius: 8)
                 .overlay {
-                    // Add glass effect
                     RoundedRectangle(cornerRadius: 15)
                         .fill(.ultraThinMaterial)
                         .opacity(0.1)
@@ -25,7 +24,6 @@ struct CategoryCell: View {
     }
 }
 
-// Add custom button style for better interaction feedback
 struct CategoryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
