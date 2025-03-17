@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct LoginForm: View {
+    @State var loadingInfo: Bool = false
+    @State private var loadingOffset: CGFloat = -100
     @Binding var username: String
     @Binding var password: String
     @Binding var isUsernameFocused: Bool
     @Binding var isPasswordFocused: Bool
+    
     let onLoginTap: () -> Void
     let loginState: DefaultViewState
     
@@ -51,7 +54,11 @@ struct LoginForm: View {
                     }
             }
             
-            Button(action: onLoginTap) {
+            Button(action: {
+                onLoginTap()
+                self.loadingInfo = true
+                
+            }) {
                 Text("Login")
                     .font(.headline)
                     .foregroundColor(.white)
@@ -68,12 +75,19 @@ struct LoginForm: View {
                     .shadow(color: .blue.opacity(0.3), radius: 5, y: 2)
             }
             
+            ProgressView()
+                .offset(y: loadingOffset)
+                .opacity(loadingInfo ? 1 : 0)
+            
             if case .error(let message) = loginState {
                 Text(message)
                     .foregroundColor(.red)
                     .font(.subheadline)
                     .transition(.scale.combined(with: .opacity))
             }
+        }
+        .onChange(of: loadingInfo) { oldValue, newValue in
+            self.loadingOffset = loadingInfo ? 0 : -100
         }
     }
 }

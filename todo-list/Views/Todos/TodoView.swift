@@ -10,11 +10,11 @@ import SwiftUI
 struct TodoView: View {
     @AppStorage("todos", store: UserDefaults(suiteName: "group.luizmello.todolist")) private var todosData: Data?
     
+    @State private var uiState = TodoUIState()
     @StateObject private var viewModel = TodoViewModel()
-    @ObservedObject var loginViewModel: LoginViewModel
     @StateObject private var onboardingState = OnboardingState()
     
-    @State private var uiState = TodoUIState()
+    @ObservedObject var loginViewModel: LoginViewModel
     
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
