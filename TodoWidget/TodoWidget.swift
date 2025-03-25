@@ -9,7 +9,6 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 
-
 struct Provider: TimelineProvider {
     
     let data = DataService()
@@ -71,13 +70,13 @@ struct TodoWidgetEntryView: View {
                     
                     Text(todo.content)
                         .strikethrough(todo.completed)
-                        .foregroundStyle(todo.completed ? .gray : .primary)
+                        .foregroundStyle(todo.completed ? .gray : Color(UIColor.label))
                         .font(.caption)
                 }
             }
         }
         .containerBackground(for: .widget) {
-            Color.white
+            Color(UIColor.systemBackground)
         }
     }
 }
