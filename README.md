@@ -1,46 +1,44 @@
 # Todo-list
 
-## 📌 Sobre o Projeto
+## 📌 About the Project
 
-O **Todo-list** é um aplicativo simples para iOS desenvolvido para ajudar você a gerenciar suas tarefas do dia a dia de forma rápida e eficiente. Com um design clean e funcionalidades poderosas, ele permite organizar suas pendências de maneira prática.
+The **Todo-list** is a simple iOS application designed to help you manage your daily tasks quickly and efficiently. With a clean design and powerful features, it allows you to organize your to-dos in a practical way.
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Technologies
 
-Este projeto foi desenvolvido com as seguintes tecnologias:
+This project was developed with the following technologies:
 
-- 🍏 **SwiftUI** para interface moderna e fluida
-- 🗄 **SQLite** para armazenamento local de tarefas
-- 🔒 **JWT + Bearer Tokens** para autenticação segura
-- 📡 **Backend próprio** para sincronização dos dados
-- 📲 **Widget** para visualizar tarefas rapidamente na tela inicial
+- 🍏 **SwiftUI** for a modern and fluid interface
+- 🗄 **SQLite** for local task storage
+- 🔒 **JWT + Bearer Tokens** for secure authentication
+- 📡 **Custom Backend** for data synchronization
+- 📲 **Widget** for quick task view on the home screen
 
-## 🎯 Funcionalidades
+## 🎯 Features
 
-✅ Criar, editar e excluir tarefas facilmente
-✅ Organização eficiente com categorias e filtros
-✅ Autenticação segura com sistema de usuários
-✅ Sincronização automática entre dispositivos
-✅ Widget para acesso rápido às tarefas
+✅ Create, edit, and delete tasks easily  
+✅ Efficient organization with categories and filters  
+✅ Secure authentication with user system  
+✅ Automatic synchronization across devices  
+✅ Widget for quick task access
 
-## 🛠 Como Rodar o Projeto
+## 🛠 How to Run the Project
 
-1. Clone o repositório:
+1. Clone the repository:
    ```sh
    git clone https://github.com/luizmellodev/todo-list.git
    ```
-2. Abra o projeto no Xcode:
+2. Open the project in Xcode:
    ```sh
    cd todo-list
    open todo-list.xcodeproj
    ```
-3. Instale as dependências e configure o ambiente
-4. Compile e execute no simulador ou dispositivo físico
+3. Install dependencies and configure the environment.
+4. Build and run on the simulator or physical device.
 
-## 📜 Licença
+## 📜 License
+This project is licensed under the MIT License - see the LICENSE file for more details.
 
-Este projeto está sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
----
-
-Feito com ❤️ por [Luiz Mello](https://github.com/luizmellodev)
+Made with ❤️ by Luiz Mello
 
