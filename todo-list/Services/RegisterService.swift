@@ -20,14 +20,27 @@ class RegisterService: RegisterServiceProtocol {
     }
 
     func register(username: String, password: String, name: String) -> AnyPublisher<UserResponse, NetworkError> {
-        let parameters = [
+        let userCreate = [
             "username": username,
-            "password": password,
             "name": name,
-            "disabled": "false"
+            "password": password
         ]
+        
+        let bodyData: Data?
+        do {
+            bodyData = try JSONSerialization.data(withJSONObject: userCreate)
+        } catch {
+            return Fail(error: .encodingError).eraseToAnyPublisher()
+        }
 
-        return networkManager.sendRequest("/register", method: "POST", parameters: parameters, authentication: nil, token: nil, body: nil)
-            .eraseToAnyPublisher()
+        return networkManager.sendRequest(
+            "/register",
+            method: "POST",
+            parameters: nil,
+            authentication: nil,
+            token: nil,
+            body: bodyData
+        )
+        .eraseToAnyPublisher()
     }
 }

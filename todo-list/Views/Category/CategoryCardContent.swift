@@ -11,22 +11,22 @@ struct CategoryCardContent: View {
     let category: Category
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(category.name)
-                    .font(.title3.bold())
-                    .foregroundStyle(.white)
-                
-                Spacer()
-                
-                Image(systemName: "folder.fill")
-                    .foregroundStyle(.white.opacity(0.8))
-            }
+        VStack(alignment: .leading, spacing: 8) {
+            Text(category.name)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
             
             Spacer()
             
-            CategoryCardStats(category: category)
+            HStack {
+                Text(category.todos.isEmpty ? "Categoria vazia" : "\(category.todos.count) todos")
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.8))
+                
+                Spacer()
+            }
         }
-        .padding(15)
+        .padding()
     }
 }

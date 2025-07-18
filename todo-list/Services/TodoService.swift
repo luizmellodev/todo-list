@@ -12,7 +12,7 @@ protocol TodoServiceProtocol {
     func fetchCategories(token: String) -> AnyPublisher<[Category], NetworkError>
     func createCategory(name: String, token: String) -> AnyPublisher<Category, NetworkError>
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) -> AnyPublisher<Todo, NetworkError>
-    func deleteTodos(ids: [String], token: String) -> AnyPublisher<Void, NetworkError>
+    func deleteTodos(ids: [String], token: String) -> AnyPublisher<[Todo], NetworkError>
     func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?, token: String) -> AnyPublisher<Todo, NetworkError>
 }
 class TodoService: TodoServiceProtocol {
@@ -40,8 +40,14 @@ class TodoService: TodoServiceProtocol {
     }
     
     func createTodo(content: String, completed: Bool, categoryId: String?, token: String) -> AnyPublisher<Todo, NetworkError> {
-        
-        let newTodo = Todo(id: UUID().uuidString, username: "", content: content, completed: completed, createdAt: DateFormatter.formatDate(Date()), categoryId: categoryId)
+        let newTodo = Todo(
+            id: UUID().uuidString,
+            username: "",
+            content: content,
+            completed: completed,
+            createdAt: DateUtils.formatDateForAPI(Date()),
+            categoryId: categoryId
+        )
         
         guard let jsonData = try? JSONEncoder().encode(newTodo) else {
             return Fail(error: NetworkError.decodingError)
@@ -52,19 +58,21 @@ class TodoService: TodoServiceProtocol {
             .eraseToAnyPublisher()
     }
     
-    func deleteTodos(ids: [String], token: String) -> AnyPublisher<Void, NetworkError> {
-        let requestBody = ["ids": ids]
+    func deleteTodos(ids: [String], token: String) -> AnyPublisher<[Todo], NetworkError> {
+        let idsString = ids.joined(separator: ",")
+        print("Sending IDs to delete: \(idsString)")
         
-        let bodyData: Data?
-        do {
-            bodyData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
-        } catch {
-            return Fail(error: .encodingError).eraseToAnyPublisher()
-        }
-
-        return self.networkManager.sendRequest("/todos/", method: "DELETE", parameters: nil, authentication: nil, token: token, body: bodyData)
-            .map { (_: [Todo]) in () }
-            .eraseToAnyPublisher()
+        let urlString = "/todos?ids=\(idsString)"
+        
+        return self.networkManager.sendRequest(
+            urlString,
+            method: "DELETE",
+            parameters: nil,
+            authentication: nil,
+            token: token,
+            body: nil
+        )
+        .eraseToAnyPublisher()
     }
     
     func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?, token: String) -> AnyPublisher<Todo, NetworkError> {

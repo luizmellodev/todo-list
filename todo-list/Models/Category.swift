@@ -11,7 +11,7 @@ struct Category: Identifiable, Codable, Hashable {
     let id: String
     var name: String
     var createdAt: String
-    var todos: [Todo?]
+    var todos: [Todo] = []
     
     enum CodingKeys: String, CodingKey {
         case id, name, todos

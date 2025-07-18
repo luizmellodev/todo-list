@@ -91,19 +91,18 @@ class TodoViewModel: ObservableObject {
 
                     for categoryIndex in self.categories.indices {
                         self.categories[categoryIndex].todos.removeAll { todo in
-                            guard let todo = todo else { return false }
-                            return ids.contains(todo.id)
+                            ids.contains(todo.id)
                         }
                     }
 
                 case .failure(let error):
                     print("Failed to delete todos: \(error)")
                 }
-            }, receiveValue: { _ in })
+            }, receiveValue: { deletedTodos in
+                print("Deleted \(deletedTodos) todos")
+            })
             .store(in: &cancellables)
     }
-    
-    
     
     func updateTodo(id: String, content: String?, completed: Bool?, categoryId: String?, token: String) {
         todoService.updateTodo(id: id, content: content, completed: completed, categoryId: categoryId, token: token)

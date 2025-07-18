@@ -33,7 +33,7 @@ struct TodoSection: View {
                     selectedTodoIDs: $selectedTodoIDs,
                     token: token
                 )
-                .id(category.todos[index]?.id)
+                .id(category.todos[index].id)
                 .environmentObject(viewModel)
             }
             .padding(.horizontal)

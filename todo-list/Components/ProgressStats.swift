@@ -11,11 +11,11 @@ struct ProgressStats: View {
     let category: Category
     
     private var pendingCount: Int {
-        category.todos.filter { $0?.completed == false }.count
+        category.todos.filter { $0.completed == false }.count
     }
     
     private var completedCount: Int {
-        category.todos.filter { $0?.completed == true }.count
+        category.todos.filter { $0.completed == true }.count
     }
     
     var body: some View {

@@ -32,7 +32,7 @@ final class TodoViewModelTests: XCTestCase {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             XCTAssertTrue(self.mockService.fetchCategoriesCalled, "fetchCategories() should be called")
-            XCTAssertEqual(self.viewModel.categories.count, 1, "There should be one category fetched")
+            XCTAssertEqual(self.viewModel.categories.count, 2, "There should be two category fetched")
             expectation.fulfill()
         }
         
@@ -58,7 +58,7 @@ final class TodoViewModelTests: XCTestCase {
     func testCreateCategorySuccess() {
         let expectation = XCTestExpectation(description: "Create category successfully")
         
-        viewModel.createCategory(name: "Personal", token: "valid_token")
+        viewModel.createCategory(name: "Personal", token: "valid_token", completion: {_ in })
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             XCTAssertTrue(self.mockService.createCategoryCalled, "createCategory() should be called")

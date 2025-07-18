@@ -11,7 +11,7 @@ import Combine
 class NetworkManager: NetworkManagerProtocol {
     
     static let shared = NetworkManager()
-    let baseURL = URL(string: "https://fastapi-learn-dm10.onrender.com")!
+    let baseURL = URL(string: "http://localhost:8000")!
     
     private init() {}
     

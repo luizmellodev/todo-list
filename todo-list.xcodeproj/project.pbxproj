@@ -20,6 +20,8 @@
 		791D4AD72D1B43DE003CCC2B /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7916EDFD2CA4D95200827762 /* Todo.swift */; };
 		791D4ADB2D1CCB36003CCC2B /* TodoRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D4ADA2D1CCB36003CCC2B /* TodoRowView.swift */; };
 		791D4ADD2D1CCB3F003CCC2B /* AddTodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D4ADC2D1CCB3F003CCC2B /* AddTodoView.swift */; };
+		7925790A2E2A9718003C9BE0 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792579092E2A9718003C9BE0 /* DateUtils.swift */; };
+		7925792F2E2AAFE6003C9BE0 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792579092E2A9718003C9BE0 /* DateUtils.swift */; };
 		795F669C2CF9641D003D497B /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795F669B2CF9641D003D497B /* RequestBuilder.swift */; };
 		795F669E2CF964D4003D497B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795F669D2CF964D4003D497B /* LoginView.swift */; };
 		795F66A02CF964E2003D497B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795F669F2CF964E2003D497B /* LoginViewModel.swift */; };
@@ -131,6 +133,7 @@
 		791D4A9C2D1A545A003CCC2B /* TodoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TodoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		791D4ADA2D1CCB36003CCC2B /* TodoRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRowView.swift; sourceTree = "<group>"; };
 		791D4ADC2D1CCB3F003CCC2B /* AddTodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoView.swift; sourceTree = "<group>"; };
+		792579092E2A9718003C9BE0 /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		795F669B2CF9641D003D497B /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		795F669D2CF964D4003D497B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		795F669F2CF964E2003D497B /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -244,6 +247,7 @@
 		7916EDFC2CA4D94900827762 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				792579092E2A9718003C9BE0 /* DateUtils.swift */,
 				79D7E3572D80E7B600391C82 /* OnboardingState.swift */,
 				79D7E3552D80E79F00391C82 /* TodoUIState.swift */,
 				79D7E3532D80E55500391C82 /* PendingTodo.swift */,
@@ -619,6 +623,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				791D4AD72D1B43DE003CCC2B /* Todo.swift in Sources */,
+				7925792F2E2AAFE6003C9BE0 /* DateUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,6 +636,7 @@
 				79D7E3642D80E89500391C82 /* EmptyStateContent.swift in Sources */,
 				79D7E33F2D807B0600391C82 /* RegisterService.swift in Sources */,
 				7997A31B2D6503AC007B670C /* CategoryService.swift in Sources */,
+				7925790A2E2A9718003C9BE0 /* DateUtils.swift in Sources */,
 				7997A2D32D582FE2007B670C /* CategoryChipsView.swift in Sources */,
 				7916EE0B2CA4DA2600827762 /* TodoViewModel.swift in Sources */,
 				7916EE162CBC89BC00827762 /* NetworkError.swift in Sources */,
@@ -922,7 +928,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -958,7 +964,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

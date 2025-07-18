@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct Todo: Identifiable, Codable {
     let id: String
     var username: String
@@ -43,8 +42,7 @@ struct Todo: Identifiable, Codable {
         username: "username",
         content: "Placeholder Todo",
         completed: false,
-        createdAt: "\(Date())",
+        createdAt: DateUtils.formatDateForAPI(Date()),
         categoryId: ""
     )
 }
-

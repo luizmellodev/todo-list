@@ -20,5 +20,3 @@ protocol NetworkManagerProtocol {
         body: Data?
     ) -> AnyPublisher<T, NetworkError>
 }
-
-
